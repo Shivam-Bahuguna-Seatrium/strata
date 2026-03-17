@@ -8,30 +8,30 @@ export default function CTASection() {
 
   return (
     <section className="relative section-shell overflow-hidden underwater-bg wave-divider">
-      {/* Deep ocean ripple background */}
+      {/* Background ripples */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         {[0, 1, 2, 3, 4].map(i => (
           <motion.div
             key={i}
-            animate={{ scale: [0.6, 2.5], opacity: [0.2, 0] }}
+            animate={{ scale: [0.6, 2.5], opacity: [0.15, 0] }}
             transition={{ duration: 4.5, repeat: Infinity, delay: i * 0.9, ease: 'easeOut' }}
             className="absolute w-80 h-80 rounded-full"
-            style={{ border: '1px solid rgba(0,119,255,0.25)' }}
+            style={{ border: '1px solid rgba(0,119,255,0.15)' }}
           />
         ))}
         <div className="absolute w-[600px] h-[600px] rounded-full"
-          style={{ background: 'radial-gradient(ellipse, rgba(0,119,255,0.14) 0%, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(ellipse, rgba(0,119,255,0.1) 0%, transparent 70%)' }} />
       </div>
 
       <div className="relative z-10 section-inner text-center">
-        <div className="w-full max-w-5xl mx-auto underwater-card-strong rounded-3xl px-6 py-10 md:px-12 md:py-14 lg:px-14 lg:py-16">
+        <div className="w-full max-w-4xl mx-auto px-6 py-12 md:px-12 md:py-16">
         {/* Mascot */}
         <motion.div
           animate={{ y: [0, -12, 0] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="mx-auto mb-12 w-20 h-20 flex items-center justify-center"
+          className="mx-auto mb-10 w-20 h-20 flex items-center justify-center"
         >
-          <svg width="72" height="90" viewBox="0 0 80 100" fill="none">
+          <svg width="64" height="80" viewBox="0 0 80 100" fill="none">
             <path d="M40 5C40 5 10 45 10 65C10 82 23 95 40 95C57 95 70 82 70 65C70 45 40 5 40 5Z"
               fill="url(#ctaGrad)" />
             <ellipse cx="27" cy="60" rx="11" ry="8" fill="#051A2E" />
@@ -54,46 +54,42 @@ export default function CTASection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="space-y-9 md:space-y-11"
+          className="space-y-8"
         >
-          <h2 className="font-display text-5xl md:text-7xl font-extrabold leading-[0.95]">
-            <span className="text-blue-900">{BRAND.subTagline}</span>
-            <br />
-            <span className="gradient-text-coral">{BRAND.tagline}</span>
+          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl text-blue-900 leading-[1]">
+            {BRAND.subTagline}<br />
+            <span className="gradient-neon">{BRAND.tagline}</span>
           </h2>
-          <div className="h-2" />
 
-          <p className="text-blue-800/90 text-lg md:text-xl max-w-xl mx-auto leading-relaxed font-semibold">
+          <p className="font-body text-lg md:text-xl text-blue-800/70 max-w-xl mx-auto leading-relaxed">
             {BRAND.antiSugar} {BRAND.science}
           </p>
-          <div className="h-2" />
 
-          {/* Dehydration effects */}
-          <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
+          {/* Dehydration effects - clean tags, no heavy boxes */}
+          <div className="flex flex-wrap justify-center gap-2.5 max-w-2xl mx-auto">
             {BRAND.dehydrationEffects.map((effect) => (
-              <span key={effect} className="px-4 py-2 rounded-full text-sm font-bold"
-                style={{ background: 'rgba(255,20,147,0.12)', color: '#FF1493', border: '1px solid rgba(255,20,147,0.3)' }}>
+              <span key={effect} className="font-label px-4 py-2 rounded-full text-[11px]"
+                style={{ background: 'rgba(255,20,147,0.08)', color: '#FF1493', border: '1px solid rgba(255,20,147,0.2)' }}>
                 {effect}
               </span>
             ))}
           </div>
-          <div className="h-2" />
 
-          <p className="text-blue-700 text-base max-w-lg mx-auto">
+          <p className="font-body text-blue-600/70 text-base max-w-lg mx-auto">
             Join {BRAND.stats.users} people who chose science over sugar. {flavorCount} flavors. Zero compromise.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
             <motion.a
               href="#product"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              className="inline-block px-14 py-5 rounded-full text-lg font-black text-white glow-coral transition-all"
-              style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00D4FF 56%, #FF1493 100%)' }}
+              className="inline-block px-12 py-4 rounded-2xl text-lg font-headline text-white transition-all"
+              style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00D4FF 56%, #FF1493 100%)', boxShadow: '0 8px 30px rgba(0,119,255,0.35)' }}
             >
               Shop STRATA &rarr;
             </motion.a>
-            <p className="text-blue-800/70 text-sm">Free shipping &middot; 30-day guarantee</p>
+            <span className="font-body text-blue-700/50 text-sm">Free shipping &middot; 30-day guarantee</span>
           </div>
         </motion.div>
         </div>

@@ -6,60 +6,12 @@ import { useInView } from 'framer-motion';
 import { BRAND } from '@/config/flavors';
 
 const ingredients = [
-  {
-    name: 'Sodium (Na)',
-    desc: 'Maintains blood volume, supports nerve signaling, and retains fluid in circulation. The foundation of proper hydration.',
-    icon: 'Na',
-    iconType: 'symbol' as const,
-    color: '#00E5FF',
-    amount: '500mg',
-    benefits: ['Blood volume regulation', 'Nerve signal support', 'Fluid retention'],
-  },
-  {
-    name: 'Potassium (K)',
-    desc: 'Regulates fluid inside cells and supports muscle and nerve function. Essential for intracellular hydration balance.',
-    icon: 'K',
-    iconType: 'symbol' as const,
-    color: '#FF1493',
-    amount: '200mg',
-    benefits: ['Intracellular fluid', 'Muscle function', 'Nerve regulation'],
-  },
-  {
-    name: 'Magnesium (Mg)',
-    desc: 'Supports muscle relaxation, energy production (ATP), and nerve stability. The anti-cramp, anti-fatigue mineral.',
-    icon: 'Mg',
-    iconType: 'symbol' as const,
-    color: '#00FF00',
-    amount: '80mg',
-    benefits: ['Muscle relaxation', 'ATP energy production', 'Nerve stability'],
-  },
-  {
-    name: 'Coconut Water Extract',
-    desc: "Nature's perfect isotonic drink. Natural minerals and cytokines for deep cellular hydration developed over millennia.",
-    icon: '\ud83e\udd65',
-    iconType: 'emoji' as const,
-    color: '#FFD700',
-    amount: 'Natural',
-    benefits: ['Deep hydration', 'Natural isotonic', 'Rapid absorption'],
-  },
-  {
-    name: 'Vitamin C + B Complex',
-    desc: 'B6, B12, and C vitamins support energy metabolism and immune defense. Complete daily micronutrient coverage.',
-    icon: '\ud83d\udc8a',
-    iconType: 'emoji' as const,
-    color: '#FF5F00',
-    amount: '100% DV',
-    benefits: ['Energy metabolism', 'Immune defense', 'Antioxidant shield'],
-  },
-  {
-    name: 'Anti-Inflammatory Blend',
-    desc: 'Ginger, Turmeric, and Curcumin reduce muscle soreness and accelerate recovery. Science-backed natural compounds.',
-    icon: '\ud83d\udd25',
-    iconType: 'emoji' as const,
-    color: '#00FFFF',
-    amount: 'Clinical',
-    benefits: ['DOMS reduction', 'Faster recovery', 'Anti-inflammatory'],
-  },
+  { name: 'Sodium (Na)', desc: 'Maintains blood volume, supports nerve signaling, and retains fluid in circulation.', icon: 'Na', iconType: 'symbol' as const, color: '#00E5FF', amount: '500mg', benefits: ['Blood volume', 'Nerve signals', 'Fluid retention'] },
+  { name: 'Potassium (K)', desc: 'Regulates fluid inside cells and supports muscle and nerve function.', icon: 'K', iconType: 'symbol' as const, color: '#FF1493', amount: '200mg', benefits: ['Intracellular fluid', 'Muscle function', 'Nerve regulation'] },
+  { name: 'Magnesium (Mg)', desc: 'Supports muscle relaxation, energy production (ATP), and nerve stability.', icon: 'Mg', iconType: 'symbol' as const, color: '#00FF00', amount: '80mg', benefits: ['Muscle relaxation', 'ATP production', 'Nerve stability'] },
+  { name: 'Coconut Water', desc: "Nature's perfect isotonic drink. Natural minerals for deep cellular hydration.", icon: '\ud83e\udd65', iconType: 'emoji' as const, color: '#FFD700', amount: 'Natural', benefits: ['Deep hydration', 'Natural isotonic', 'Rapid absorption'] },
+  { name: 'Vitamin C + B', desc: 'B6, B12, and C vitamins support energy metabolism and immune defense.', icon: '\ud83d\udc8a', iconType: 'emoji' as const, color: '#FF5F00', amount: '100% DV', benefits: ['Energy metabolism', 'Immune defense', 'Antioxidant'] },
+  { name: 'Anti-Inflammatory', desc: 'Ginger, Turmeric, and Curcumin reduce soreness and accelerate recovery.', icon: '\ud83d\udd25', iconType: 'emoji' as const, color: '#00FFFF', amount: 'Clinical', benefits: ['DOMS reduction', 'Faster recovery', 'Anti-inflammatory'] },
 ];
 
 function IngredientCard({ ing, i }: { ing: typeof ingredients[0]; i: number }) {
@@ -71,48 +23,43 @@ function IngredientCard({ ing, i }: { ing: typeof ingredients[0]; i: number }) {
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: i * 0.1, duration: 0.6 }}
-      className="relative rounded-2xl overflow-hidden group cursor-default h-full card-solid"
+      className="relative rounded-2xl overflow-hidden group cursor-default h-full"
       style={{
-        background: `linear-gradient(155deg, ${ing.color}34 0%, ${ing.color}20 38%, rgba(255,255,255,0.93) 100%)`,
-        border: `2px solid ${ing.color}40`,
-        padding: '26px 22px',
+        background: `linear-gradient(155deg, ${ing.color}18 0%, rgba(255,255,255,0.96) 50%, rgba(255,255,255,0.92) 100%)`,
+        border: `1.5px solid ${ing.color}30`,
+        padding: '26px 24px',
         minHeight: '320px',
       }}
-      whileHover={{ y: -8, boxShadow: `0 24px 60px ${ing.color}30` }}>
+      whileHover={{ y: -8, boxShadow: `0 20px 50px ${ing.color}20` }}>
 
       <div className="absolute inset-x-0 bottom-0 h-[2px]"
-        style={{ background: `linear-gradient(90deg, ${ing.color}, transparent)` }} />
+        style={{ background: `linear-gradient(90deg, ${ing.color}60, transparent)` }} />
 
-      {/* Icon: chemical symbol or emoji */}
       {ing.iconType === 'symbol' ? (
-        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center mb-4 font-black text-2xl md:text-3xl"
-          style={{ background: `${ing.color}20`, border: `2px solid ${ing.color}50`, color: ing.color }}>
+        <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl flex items-center justify-center mb-4 font-display text-xl md:text-2xl"
+          style={{ background: `${ing.color}12`, border: `1.5px solid ${ing.color}35`, color: ing.color }}>
           {ing.icon}
         </div>
       ) : (
-        <div className="text-5xl md:text-6xl mb-4">{ing.icon}</div>
+        <div className="text-4xl md:text-5xl mb-4">{ing.icon}</div>
       )}
 
-      {/* Amount badge */}
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black mb-3"
-        style={{ background: `${ing.color}20`, color: ing.color }}>
+      <span className="font-label inline-block text-[10px] px-3 py-1 rounded-full mb-3"
+        style={{ background: `${ing.color}12`, color: ing.color }}>
         {ing.amount}
-      </div>
+      </span>
 
-      <h3 className="font-display text-xl md:text-2xl font-bold text-blue-900 mb-3">{ing.name}</h3>
-      <p className="text-sm md:text-base text-blue-700 leading-relaxed mb-5">{ing.desc}</p>
+      <h3 className="font-display text-lg md:text-xl text-blue-900 mb-3">{ing.name}</h3>
+      <p className="font-body text-sm text-blue-700/75 leading-relaxed mb-5">{ing.desc}</p>
 
       <div className="space-y-2">
         {ing.benefits.map((benefit, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full" style={{ background: ing.color }} />
-            <span className="text-xs md:text-sm text-blue-800 font-medium">{benefit}</span>
+            <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ background: ing.color }} />
+            <span className="font-body text-xs text-blue-700/70">{benefit}</span>
           </div>
         ))}
       </div>
-
-      <motion.div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-        style={{ background: `radial-gradient(circle at top left, ${ing.color}08, transparent 70%)` }} />
     </motion.div>
   );
 }
@@ -131,53 +78,43 @@ export default function IngredientsSection() {
       <div className="section-inner">
           <motion.div className="section-header"
             initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
-            <span className="inline-block text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-5 px-4 py-2 rounded-full"
-              style={{ color: '#0077FF', background: 'rgba(0,119,255,0.12)', border: '1px solid rgba(0,119,255,0.3)' }}>
+            <span className="font-label inline-block mb-5 px-4 py-2 rounded-full"
+              style={{ color: '#0077FF', background: 'rgba(0,119,255,0.08)', border: '1px solid rgba(0,119,255,0.2)' }}>
               Electrolyte Science
             </span>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-900 mb-4 md:mb-6 leading-tight">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-5 leading-tight">
               Every Molecule<br />
-              <span style={{ WebkitTextFillColor: 'transparent', WebkitBackgroundClip: 'text', backgroundImage: 'linear-gradient(90deg, #00D4FF, #FF1493)' }}>
-                Has a Purpose
-              </span>
+              <span className="gradient-neon">Has a Purpose</span>
             </h2>
-            <p className="text-base md:text-lg text-blue-700 max-w-2xl mx-auto">
-              Your body is 60% water. {BRAND.science} Here is exactly what goes into every STRATA serve.
+            <p className="font-body text-base md:text-lg text-blue-700/75 max-w-2xl mx-auto">
+              Your body is 60% water. {BRAND.science}
             </p>
           </motion.div>
 
-          {/* Electrolyte quick-reference bar */}
+          {/* Electrolyte quick-reference - clean inline, no heavy box */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid grid-cols-3 gap-3 mb-8 max-w-2xl mx-auto">
+            className="flex justify-center gap-6 md:gap-10 mb-10">
             {BRAND.electrolytes.map((el) => (
-              <div key={el.symbol} className="text-center py-3 rounded-xl underwater-card-strong" style={{ border: '1px solid rgba(0,119,255,0.2)' }}>
-                <div className="text-2xl font-black text-blue-900">{el.symbol}</div>
-                <div className="text-xs text-blue-600 font-semibold">{el.name}</div>
+              <div key={el.symbol} className="text-center">
+                <div className="font-display text-2xl md:text-3xl text-blue-900">{el.symbol}</div>
+                <div className="font-label text-[10px] text-blue-500 mt-1">{el.name}</div>
               </div>
             ))}
           </motion.div>
 
           <div className="relative">
-            <div className="flex items-center justify-between gap-3 mb-4">
-              <div className="text-xs font-semibold tracking-widest uppercase text-blue-800/60">{ingredients.length} active compounds</div>
+            <div className="flex items-center justify-between gap-3 mb-5">
+              <span className="font-label text-blue-600/50">{ingredients.length} compounds</span>
               <div className="flex items-center gap-2">
-              <button
-                onClick={() => scrollCards(-1)}
-                className="w-9 h-9 rounded-full text-white font-bold text-sm"
-                style={{ background: 'linear-gradient(135deg, #0077FF, #00D4FF)' }}
-              >
-                &larr;
-              </button>
-              <button
-                onClick={() => scrollCards(1)}
-                className="w-9 h-9 rounded-full text-white font-bold text-sm"
-                style={{ background: 'linear-gradient(135deg, #FF8C00, #FF1493)' }}
-              >
-                &rarr;
-              </button>
+                <button onClick={() => scrollCards(-1)}
+                  className="w-9 h-9 rounded-full text-white font-bold text-sm"
+                  style={{ background: 'linear-gradient(135deg, #0077FF, #00D4FF)' }}>&larr;</button>
+                <button onClick={() => scrollCards(1)}
+                  className="w-9 h-9 rounded-full text-white font-bold text-sm"
+                  style={{ background: 'linear-gradient(135deg, #FF8C00, #FF1493)' }}>&rarr;</button>
               </div>
             </div>
 

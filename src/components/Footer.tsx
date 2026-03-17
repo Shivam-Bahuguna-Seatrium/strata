@@ -7,7 +7,7 @@ const cols = [
   {
     title: 'Flavors',
     color: '#FF1493',
-    links: [], // Will be auto-populated from flavors config
+    links: [],
   },
   {
     title: 'Company',
@@ -41,7 +41,6 @@ const socials = [
 export default function Footer() {
   const flavors = getActiveFlavors();
 
-  // Build flavor links dynamically
   const flavorCol = {
     ...cols[0],
     links: flavors.slice(0, 6).map(f => ({ label: `${f.emoji} ${f.name}`, href: '#product' })),
@@ -105,15 +104,15 @@ export default function Footer() {
                 </svg>
               </motion.div>
               <div>
-                <div className="text-3xl font-black text-white">{BRAND.name}</div>
-                <div className="text-sm font-bold text-white italic">Hydration</div>
+                <div className="font-display text-3xl text-white">{BRAND.name}</div>
+                <div className="font-label text-sm text-white/80">Hydration</div>
               </div>
             </a>
 
-            <p className="text-base font-bold text-white mb-4 leading-relaxed">
+            <p className="font-headline text-base text-white mb-4 leading-relaxed">
               {BRAND.positioning}
             </p>
-            <p className="text-sm font-semibold text-white/80 mb-8 italic">
+            <p className="font-body text-sm text-white/75 mb-8 italic">
               {BRAND.antiSugar}
             </p>
 
@@ -122,13 +121,13 @@ export default function Footer() {
                 <motion.a
                   key={s.name}
                   href="#"
-                  whileHover={{ scale: 1.2, y: -4 }}
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all"
+                  whileHover={{ scale: 1.15, y: -4 }}
+                  className="w-11 h-11 rounded-full flex items-center justify-center text-lg transition-all"
                   style={{
-                    background: 'rgba(255,255,255,0.3)',
-                    border: `2.5px solid ${s.color}`,
+                    background: 'rgba(255,255,255,0.25)',
+                    border: `1.5px solid ${s.color}`,
                     color: s.color,
-                    boxShadow: `0 4px 12px ${s.color}44`,
+                    boxShadow: `0 3px 10px ${s.color}30`,
                   }}
                 >
                   {s.icon}
@@ -137,7 +136,7 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* Link columns - auto-generates flavors */}
+          {/* Link columns */}
           {allCols.map((col, i) => (
             <motion.div
               key={col.title}
@@ -146,7 +145,7 @@ export default function Footer() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.6 }}
             >
-              <h3 className="text-base font-black text-white mb-8 uppercase tracking-wider pb-3" style={{ borderBottom: `2px solid ${col.color}` }}>
+              <h3 className="font-headline text-base text-white mb-8 uppercase tracking-wider pb-3" style={{ borderBottom: `1.5px solid ${col.color}` }}>
                 {col.title}
               </h3>
 
@@ -155,9 +154,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <motion.a
                       href={link.href}
-                      className="text-base font-bold text-white transition-all px-3 py-2 rounded-lg block hover:font-black"
+                      className="font-body text-base text-white/90 transition-all px-3 py-2 rounded-lg block"
                       whileHover={{ x: 8, backgroundColor: col.color }}
-                      style={{ color: 'rgba(255,255,255,0.95)' }}
                     >
                       {link.label}
                     </motion.a>
@@ -169,17 +167,17 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="h-[2px] mb-14 bg-white opacity-25 rounded-full" />
+        <div className="h-px mb-14 bg-white/20 rounded-full" />
 
         {/* Stats from brand config */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 rounded-3xl p-8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 rounded-2xl p-8"
           style={{
-            background: 'rgba(255,255,255,0.25)',
-            border: '2px solid rgba(255,255,255,0.5)',
+            background: 'rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.3)',
             backdropFilter: 'blur(10px)',
           }}
         >
@@ -191,12 +189,12 @@ export default function Footer() {
           ].map((s) => (
             <motion.div
               key={s.label}
-              animate={{ y: [0, -8, 0] }}
+              animate={{ y: [0, -6, 0] }}
               transition={{ duration: 3, repeat: Infinity, delay: Math.random() * 0.5 }}
               className="text-center"
             >
-              <div className="text-3xl font-black mb-3" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-base font-bold text-white">{s.label}</div>
+              <div className="font-display text-3xl mb-2" style={{ color: s.color }}>{s.value}</div>
+              <div className="font-label text-sm text-white/85">{s.label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -206,15 +204,15 @@ export default function Footer() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm font-bold text-white pb-8"
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 font-body text-sm text-white/80 pb-8"
         >
           <div>&copy; 2026 {BRAND.name}. All rights reserved.</div>
-          <div className="text-center text-base font-semibold italic text-white/90">{BRAND.science}</div>
+          <div className="text-center font-body text-base text-white/70 italic">{BRAND.science}</div>
           <div className="flex gap-8">
             {['Privacy', 'Terms', 'Sitemap'].map((lbl) => (
               <motion.a key={lbl} href="#"
-                whileHover={{ scale: 1.15, color: '#FFD700' }}
-                className="font-bold text-white transition-all">
+                whileHover={{ scale: 1.1, color: '#FFD700' }}
+                className="font-headline text-white/90 transition-all">
                 {lbl}
               </motion.a>
             ))}
