@@ -1,8 +1,11 @@
-'use client';
+﻿'use client';
 
 import { motion } from 'framer-motion';
+import { getActiveFlavors, BRAND } from '@/config/flavors';
 
 export default function CTASection() {
+  const flavorCount = getActiveFlavors().length;
+
   return (
     <section className="relative section-shell overflow-hidden underwater-bg wave-divider">
       {/* Deep ocean ripple background */}
@@ -18,8 +21,6 @@ export default function CTASection() {
         ))}
         <div className="absolute w-[600px] h-[600px] rounded-full"
           style={{ background: 'radial-gradient(ellipse, rgba(0,119,255,0.14) 0%, transparent 70%)' }} />
-        <div className="absolute w-[300px] h-[300px] rounded-full"
-          style={{ background: 'radial-gradient(ellipse, rgba(0,212,255,0.16) 0%, transparent 70%)' }} />
       </div>
 
       <div className="relative z-10 section-inner text-center">
@@ -56,17 +57,31 @@ export default function CTASection() {
           className="space-y-9 md:space-y-11"
         >
           <h2 className="font-display text-5xl md:text-7xl font-extrabold leading-[0.95]">
-            <span className="text-blue-900">Upgrade Your</span>
+            <span className="text-blue-900">{BRAND.subTagline}</span>
             <br />
-            <span className="gradient-text-coral">Hydration Game</span>
+            <span className="gradient-text-coral">{BRAND.tagline}</span>
           </h2>
-          <div className="h-4"></div>
+          <div className="h-2" />
 
-          <p className="text-blue-800/80 text-xl max-w-lg mx-auto leading-relaxed">
-            Join 50,000+ people who chose smarter hydration.
-            Your body will thank you.
+          <p className="text-blue-800/90 text-lg md:text-xl max-w-xl mx-auto leading-relaxed font-semibold">
+            {BRAND.antiSugar} {BRAND.science}
           </p>
-          <div className="h-4"></div>
+          <div className="h-2" />
+
+          {/* Dehydration effects */}
+          <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
+            {BRAND.dehydrationEffects.map((effect) => (
+              <span key={effect} className="px-4 py-2 rounded-full text-sm font-bold"
+                style={{ background: 'rgba(255,20,147,0.12)', color: '#FF1493', border: '1px solid rgba(255,20,147,0.3)' }}>
+                {effect}
+              </span>
+            ))}
+          </div>
+          <div className="h-2" />
+
+          <p className="text-blue-700 text-base max-w-lg mx-auto">
+            Join {BRAND.stats.users} people who chose science over sugar. {flavorCount} flavors. Zero compromise.
+          </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <motion.a
@@ -76,9 +91,9 @@ export default function CTASection() {
               className="inline-block px-14 py-5 rounded-full text-lg font-black text-white glow-coral transition-all"
               style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00D4FF 56%, #FF1493 100%)' }}
             >
-              Buy STRATA Hydration →
+              Shop STRATA &rarr;
             </motion.a>
-            <p className="text-blue-800/70 text-sm">Free shipping · 30-day guarantee</p>
+            <p className="text-blue-800/70 text-sm">Free shipping &middot; 30-day guarantee</p>
           </div>
         </motion.div>
         </div>

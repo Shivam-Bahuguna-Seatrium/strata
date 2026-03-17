@@ -3,20 +3,14 @@
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-
-const products = [
-  { id: 1, name: 'Watermelon Rush', emoji: '🍉', color: '#FF1493', stat: '3.2K mg', benefit: 'Perfect post-workout', badge: 'Best Seller' },
-  { id: 2, name: 'Tropical Punch', emoji: '🥭', color: '#FFD700', stat: '3.0K mg', benefit: 'Daily energy boost', badge: 'Popular' },
-  { id: 3, name: 'Berry Blast', emoji: '🫐', color: '#FF5F00', stat: '3.1K mg', benefit: 'Premium recovery', badge: 'Trending' },
-  { id: 4, name: 'Citrus Glow', emoji: '🍊', color: '#00E5FF', stat: '2.8K mg', benefit: 'Morning hydration', badge: 'New' },
-  { id: 5, name: 'Grape Surge', emoji: '🍇', color: '#00FF00', stat: '3.0K mg', benefit: 'Smooth flavor', badge: 'Classic' },
-  { id: 6, name: 'Lemon Zest', emoji: '🍋', color: '#00FFFF', stat: '2.7K mg', benefit: 'Sharp & fresh', badge: 'Natural' },
-];
+import { getActiveFlavors, BRAND } from '@/config/flavors';
+import type { Flavor } from '@/config/flavors';
 
 const Product3D = dynamic(() => import('./Product3D'), { ssr: false });
 
 export default function ProductShowcase() {
-  const [selectedProduct, setSelectedProduct] = useState(products[0]);
+  const flavors = getActiveFlavors();
+  const [selectedProduct, setSelectedProduct] = useState<Flavor>(flavors[0]);
   const [quantity, setQuantity] = useState(1);
 
   return (
@@ -30,17 +24,17 @@ export default function ProductShowcase() {
               Pick Your Flavor
             </span>
             <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-extrabold text-blue-900 mb-4 md:mb-6 leading-tight">
-              6 Killer<br className="hidden md:block" />
-              <span className="gradient-neon">Flavors</span>
+              {flavors.length} Flavors.<br className="hidden md:block" />
+              <span className="gradient-neon">Zero Sugar.</span>
             </h2>
             <p className="text-base md:text-lg text-blue-700 max-w-2xl mx-auto px-4">
-              Every flavor hits different. Choose your hydration vibe.
+              Every flavor delivers the same electrolyte science. Choose your taste, not your compromise.
             </p>
           </motion.div>
 
-          {/* Product grid */}
+          {/* Product grid - auto-generates from flavors config */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-20 md:mb-28">
-            {products.map((product, i) => (
+            {flavors.map((product, i) => (
               <motion.button key={product.id}
                 onClick={() => setSelectedProduct(product)}
                 initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
@@ -58,7 +52,7 @@ export default function ProductShowcase() {
                 whileHover={{ scale: 1.05, boxShadow: `0 8px 25px ${product.color}25` }}>
                 
                 <div className="flex flex-col items-center gap-2 md:gap-3">
-                  <span className="text-3 md:text-4xl">{product.emoji}</span>
+                  <span className="text-3xl md:text-4xl">{product.emoji}</span>
                   <div className="text-center">
                     <h4 className="text-xs md:text-sm font-bold text-blue-900 leading-tight">{product.name}</h4>
                     <span className="text-[10px] md:text-xs px-2 py-0.5 rounded-full mt-1.5 inline-block font-medium"
@@ -71,7 +65,7 @@ export default function ProductShowcase() {
             ))}
           </div>
 
-          <div className="h-4"></div>
+          <div className="h-4" />
 
           {/* Main product detail section */}
           <motion.div
@@ -83,9 +77,7 @@ export default function ProductShowcase() {
             
             {/* Left: Product info */}
             <div className="flex flex-col justify-between gap-8 p-8 md:p-10 rounded-2xl md:rounded-3xl underwater-card-strong"
-              style={{
-                border: '2px solid rgba(0,119,255,0.2)',
-              }}>
+              style={{ border: '2px solid rgba(0,119,255,0.2)' }}>
               <div>
                 <motion.div
                   key={selectedProduct.id}
@@ -93,14 +85,16 @@ export default function ProductShowcase() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="mb-8">
                   <h3 className="text-4xl md:text-5xl font-black text-blue-900 mb-2">{selectedProduct.emoji}</h3>
-                  <h2 className="text-2xl md:text-4xl font-black text-blue-900 mb-4">{selectedProduct.name}</h2>
+                  <h2 className="text-2xl md:text-4xl font-black text-blue-900 mb-2">{selectedProduct.name}</h2>
+                  <p className="text-sm text-blue-600 italic font-semibold mb-4">{selectedProduct.tagline}</p>
                   <div className="flex items-baseline gap-3 mb-6">
                     <div className="text-3xl md:text-4xl font-black" style={{ color: selectedProduct.color }}>
-                      ${(15 + (selectedProduct.id % 3) * 5).toFixed(0)}
+                      ${selectedProduct.price}
                     </div>
                     <div className="text-blue-700 text-sm">per 20 pack</div>
                   </div>
-                  <p className="text-blue-700 text-sm md:text-base mb-6">{selectedProduct.benefit}</p>
+                  <p className="text-blue-700 text-sm md:text-base mb-4">{selectedProduct.description}</p>
+                  <p className="text-blue-600 text-xs font-semibold">{selectedProduct.benefit}</p>
                 </motion.div>
 
                 {/* Image placeholder */}
@@ -129,7 +123,7 @@ export default function ProductShowcase() {
               <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center gap-3 underwater-card rounded-lg p-2">
                   <button onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 rounded text-blue-700 hover:text-blue-900 transition font-bold">−</button>
+                    className="px-3 py-2 rounded text-blue-700 hover:text-blue-900 transition font-bold">&minus;</button>
                   <div className="flex-1 text-center font-bold text-blue-900">{quantity}x</div>
                   <button onClick={() => setQuantity(quantity + 1)}
                     className="px-3 py-2 rounded text-blue-700 hover:text-blue-900 transition font-bold">+</button>
@@ -147,14 +141,14 @@ export default function ProductShowcase() {
                 </motion.button>
 
                 <motion.a href="#"
-                  className="w-full px-6 md:px-8 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-blue-700 font-bold text-center transition-all text-sm md:text-base"
+                  className="w-full px-6 md:px-8 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-blue-700 font-bold text-center transition-all text-sm md:text-base block"
                   style={{
                     background: 'rgba(0,119,255,0.08)',
                     border: '1px solid rgba(0,119,255,0.4)',
                   }}
                   whileHover={{ background: 'rgba(0,119,255,0.15)' }}
                   whileTap={{ scale: 0.98 }}>
-                  Learn Recipe
+                  View Nutrition Facts
                 </motion.a>
               </div>
             </div>
@@ -166,10 +160,7 @@ export default function ProductShowcase() {
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.8 }}
               className="hidden md:block relative h-full min-h-[500px] rounded-2xl md:rounded-3xl overflow-hidden underwater-card-strong"
-              style={{
-                border: '2px solid rgba(0,119,255,0.2)',
-                backdropFilter: 'blur(10px)',
-              }}>
+              style={{ border: '2px solid rgba(0,119,255,0.2)', backdropFilter: 'blur(10px)' }}>
               <div className="w-full h-full flex items-center justify-center">
                 <Product3D />
               </div>
@@ -181,13 +172,13 @@ export default function ProductShowcase() {
               </div>
             </motion.div>
 
-            {/* Right: Key features */}
+            {/* Right: Key features - from brand framework */}
             <div className="space-y-4 md:space-y-5">
               {[
-                { icon: '⚡', title: 'Fast Acting', text: '15 min to peak electrolytes', color: '#0077FF' },
-                { icon: '💧', title: '3x Hydration', text: 'Superior absorption vs water', color: '#FF8C00' },
-                { icon: '🌿', title: 'Clean Formula', text: 'No artificial flavors', color: '#22C55E' },
-                { icon: '🔬', title: 'Science Backed', text: 'Clinically tested formula', color: '#8B5CF6' },
+                { icon: '\u26a1', title: 'Fast Acting', text: 'Electrolytes absorb in 15 min', color: '#0077FF' },
+                { icon: '\ud83d\udca7', title: '3x Hydration', text: 'Superior to water alone', color: '#FF8C00' },
+                { icon: '\ud83d\udeab', title: 'Zero Sugar', text: "Sugar isn't energy. It's drama.", color: '#22C55E' },
+                { icon: '\ud83d\udd2c', title: 'Na + K + Mg', text: 'Clinical electrolyte ratios', color: '#8B5CF6' },
               ].map((feat, i) => (
                 <motion.div key={feat.title}
                   initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}

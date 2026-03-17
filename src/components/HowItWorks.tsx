@@ -7,31 +7,35 @@ import { useInView } from 'framer-motion';
 const steps = [
   {
     num: '01',
-    title: 'Sip STRATA Bottle',
-    desc: 'Crack open an ice-cold bottle of scientifically calibrated hydration. Refreshment starts immediately.',
-    icon: '🍹',
+    title: 'Tear & Pour',
+    desc: 'Tear open a STRATA stick pack. Pour into 300-400ml cold water. Electrolytes begin dissolving instantly.',
+    icon: '\ud83e\uddea',
     color: '#00E5FF',
+    science: 'Electrolyte powder = faster dissolution than tablets',
   },
   {
     num: '02',
-    title: 'Instant Absorption',
-    desc: 'Electrolytes and bioavailable minerals absorb in under 15 minutes. Your body feels it immediately.',
-    icon: '⚡',
+    title: 'Rapid Absorption',
+    desc: 'Sodium and Potassium enter your bloodstream within 15 minutes. Your cells begin rehydrating at the molecular level.',
+    icon: '\u26a1',
     color: '#FF1493',
+    science: 'Na drives osmotic absorption across gut lining',
   },
   {
     num: '03',
-    title: 'Peak Performance',
-    desc: 'Energy, focus, and endurance unlock. Train harder, think sharper, stay stronger all day.',
-    icon: '🚀',
+    title: 'Baseline Restored',
+    desc: 'Energy, focus, and mood return to peak. No sugar spike. No crash. Just your body running on proper fluid balance.',
+    icon: '\ud83d\ude80',
     color: '#00FF00',
+    science: 'Electrolyte balance = restored nerve signaling',
   },
   {
     num: '04',
-    title: 'Fast Recovery',
-    desc: 'Anti-inflammatory formula activates muscle recovery. DOMS vanishes, bounce-back accelerates.',
-    icon: '💪',
+    title: 'Sustained Performance',
+    desc: 'Anti-inflammatory compounds activate recovery. Magnesium relaxes muscles. You perform better, longer, every day.',
+    icon: '\ud83d\udcaa',
     color: '#FFD700',
+    science: 'Mg + K = muscle recovery + sustained energy',
   },
 ];
 
@@ -47,7 +51,7 @@ function StepCard({ step, i }: { step: typeof steps[0]; i: number }) {
       className="relative card-solid rounded-3xl p-5 md:p-6"
       style={{
         background: `linear-gradient(150deg, ${step.color}28 0%, ${step.color}14 36%, rgba(255,255,255,0.92) 100%)`,
-        minHeight: '150px',
+        minHeight: '180px',
       }}>
 
       <div className="flex gap-6 md:gap-9 items-start">
@@ -67,11 +71,13 @@ function StepCard({ step, i }: { step: typeof steps[0]; i: number }) {
 
         <div className="flex-1 pt-2">
           <h3 className="font-display text-xl md:text-2xl font-bold text-blue-900 mb-2">{step.title}</h3>
-          <p className="text-sm md:text-base text-blue-700 leading-relaxed">{step.desc}</p>
+          <p className="text-sm md:text-base text-blue-700 leading-relaxed mb-3">{step.desc}</p>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+            style={{ background: `${step.color}18`, color: step.color, border: `1px solid ${step.color}40` }}>
+            \ud83d\udd2c {step.science}
+          </div>
         </div>
       </div>
-
-      {i < steps.length - 1 && <div className="hidden" />}
     </motion.div>
   );
 }
@@ -87,13 +93,13 @@ export default function HowItWorks() {
               The STRATA Effect
             </span>
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-900 mb-4 md:mb-6 leading-tight">
-              How STRATA<br />
+              From Dehydrated<br />
               <span style={{ WebkitTextFillColor: 'transparent', WebkitBackgroundClip: 'text', backgroundImage: 'linear-gradient(90deg, #00E5FF, #FF1493)' }}>
-                Powers You
+                To Peak Performance
               </span>
             </h2>
             <p className="text-base md:text-lg text-blue-700 max-w-2xl mx-auto">
-              From your first sip to peak performance. Watch the transformation unfold.
+              Proper hydration isn't about drinking more water. It's about locking it in with electrolytes.
             </p>
           </motion.div>
 

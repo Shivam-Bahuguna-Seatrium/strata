@@ -1,24 +1,20 @@
 ﻿'use client';
 
 import { motion } from 'framer-motion';
+import { getActiveFlavors, BRAND } from '@/config/flavors';
 
 const cols = [
   {
-    title: 'Product',
+    title: 'Flavors',
     color: '#FF1493',
-    links: [
-      { label: 'Hydration', href: '#' },
-      { label: 'Workout', href: '#' },
-      { label: 'Recovery', href: '#' },
-      { label: 'All', href: '#' },
-    ],
+    links: [], // Will be auto-populated from flavors config
   },
   {
     title: 'Company',
     color: '#00E5FF',
     links: [
       { label: 'About', href: '#' },
-      { label: 'Story', href: '#' },
+      { label: 'Our Science', href: '#' },
       { label: 'Careers', href: '#' },
       { label: 'Contact', href: '#' },
     ],
@@ -36,13 +32,22 @@ const cols = [
 ];
 
 const socials = [
-  { name: 'Twitter', color: '#FF1493', icon: '𝕏' },
-  { name: 'Instagram', color: '#00E5FF', icon: '📷' },
-  { name: 'Facebook', color: '#00FF00', icon: '👍' },
-  { name: 'TikTok', color: '#FFD700', icon: '🎵' },
+  { name: 'Twitter', color: '#FF1493', icon: '\ud835\udd4f' },
+  { name: 'Instagram', color: '#00E5FF', icon: '\ud83d\udcf7' },
+  { name: 'Facebook', color: '#00FF00', icon: '\ud83d\udc4d' },
+  { name: 'TikTok', color: '#FFD700', icon: '\ud83c\udfb5' },
 ];
 
 export default function Footer() {
+  const flavors = getActiveFlavors();
+
+  // Build flavor links dynamically
+  const flavorCol = {
+    ...cols[0],
+    links: flavors.slice(0, 6).map(f => ({ label: `${f.emoji} ${f.name}`, href: '#product' })),
+  };
+  const allCols = [flavorCol, cols[1], cols[2]];
+
   return (
     <footer
       className="relative overflow-hidden"
@@ -72,11 +77,8 @@ export default function Footer() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-8 lg:px-16 xl:px-20 py-16 md:py-20">
 
-        <div className="h-4"></div>
-
         {/* Main grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 md:gap-16 mb-16">
-            
 
           {/* Brand */}
           <motion.div
@@ -103,16 +105,17 @@ export default function Footer() {
                 </svg>
               </motion.div>
               <div>
-                <div className="text-3xl font-black text-white">STRATA</div>
+                <div className="text-3xl font-black text-white">{BRAND.name}</div>
                 <div className="text-sm font-bold text-white italic">Hydration</div>
               </div>
             </a>
 
-            <p className="text-base font-bold text-white mb-8 leading-relaxed">
-              Peak hydration. Zero sugar. Proven performance.
+            <p className="text-base font-bold text-white mb-4 leading-relaxed">
+              {BRAND.positioning}
             </p>
-
-                    <div className="h-4"></div>
+            <p className="text-sm font-semibold text-white/80 mb-8 italic">
+              {BRAND.antiSugar}
+            </p>
 
             <div className="flex gap-4">
               {socials.map((s) => (
@@ -132,11 +135,10 @@ export default function Footer() {
                 </motion.a>
               ))}
             </div>
-            
           </motion.div>
 
-          {/* Links */}
-          {cols.map((col, i) => (
+          {/* Link columns - auto-generates flavors */}
+          {allCols.map((col, i) => (
             <motion.div
               key={col.title}
               initial={{ opacity: 0, y: 20 }}
@@ -165,12 +167,11 @@ export default function Footer() {
             </motion.div>
           ))}
         </div>
-        <div className="h-4"></div>
+
         {/* Divider */}
         <div className="h-[2px] mb-14 bg-white opacity-25 rounded-full" />
-        <div className="h-4"></div>
 
-        {/* Stats */}
+        {/* Stats from brand config */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -183,10 +184,10 @@ export default function Footer() {
           }}
         >
           {[
-            { value: '50K+', label: 'Users', color: '#FF1493' },
-            { value: '4.9★', label: 'Rating', color: '#00E5FF' },
-            { value: '98%', label: 'Happy', color: '#00FF00' },
-            { value: '1M+', label: 'Sold', color: '#FFD700' },
+            { value: BRAND.stats.users, label: 'Athletes', color: '#FF1493' },
+            { value: BRAND.stats.rating, label: 'Rating', color: '#00E5FF' },
+            { value: BRAND.stats.recommend, label: 'Recommend', color: '#00FF00' },
+            { value: BRAND.stats.sold, label: 'Sticks Sold', color: '#FFD700' },
           ].map((s) => (
             <motion.div
               key={s.label}
@@ -207,23 +208,19 @@ export default function Footer() {
           viewport={{ once: true }}
           className="flex flex-col sm:flex-row items-center justify-between gap-6 text-sm font-bold text-white pb-8"
         >
-          <div>© 2026 STRATA. All rights reserved.</div>
-          <div className="text-center text-base">Made with ♥ for peak performers</div>
+          <div>&copy; 2026 {BRAND.name}. All rights reserved.</div>
+          <div className="text-center text-base font-semibold italic text-white/90">{BRAND.science}</div>
           <div className="flex gap-8">
             {['Privacy', 'Terms', 'Sitemap'].map((lbl) => (
-              <motion.a 
-                key={lbl} 
-                href="#" 
-                whileHover={{ scale: 1.15, color: '#FFD700' }} 
-                className="font-bold text-white transition-all"
-              >
+              <motion.a key={lbl} href="#"
+                whileHover={{ scale: 1.15, color: '#FFD700' }}
+                className="font-bold text-white transition-all">
                 {lbl}
               </motion.a>
             ))}
           </div>
         </motion.div>
       </div>
-              <div className="h-20"></div>
     </footer>
   );
 }
