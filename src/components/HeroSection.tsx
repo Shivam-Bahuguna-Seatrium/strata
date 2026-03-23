@@ -28,12 +28,12 @@ export default function HeroSection() {
 
       <div className="relative z-10 w-full h-full flex items-center">
         <div className="section-inner w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.9, ease: 'easeOut' }}
-              className="w-full space-y-5 md:space-y-6">
+              className="w-full space-y-7 md:space-y-8 px-1 sm:px-0">
             
             {/* Badges */}
             <motion.div className="flex flex-wrap gap-2 md:gap-3"
@@ -50,8 +50,8 @@ export default function HeroSection() {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
-                    className="font-label text-[10px] md:text-xs px-3 md:px-4 py-1.5 md:py-2 rounded-full text-gray-800"
-                    style={{ background: `${color}22`, border: `1px solid ${color}44` }}>
+                    className="font-label text-[10px] md:text-xs px-3 md:px-4 py-1.5 md:py-2 rounded-full text-gray-700"
+                    style={{ background: `${color}15` }}>
                     {emojis[i]} {badge}
                   </motion.span>
                 );
@@ -74,8 +74,8 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="font-body text-base md:text-lg text-blue-800/80 max-w-xl leading-relaxed">
-              {BRAND.science} {flavorCount} flavors. {BRAND.stats.users} athletes trust STRATA daily.
+              className="font-body text-base md:text-lg text-blue-800/80 max-w-xl leading-relaxed px-1 sm:px-0">
+              {BRAND.science} {flavorCount} flavors. Zero sugar. Zero compromise.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -86,8 +86,8 @@ export default function HeroSection() {
               className="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-lg">
               <motion.a href="#product"
                 className="px-8 md:px-10 py-3 md:py-4 rounded-2xl font-headline text-base md:text-lg text-white text-center"
-                style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00E5FF 58%, #FF1493 100%)', boxShadow: '0 8px 30px rgba(0,119,255,0.4)' }}
-                whileHover={{ scale: 1.04, boxShadow: '0 12px 50px rgba(0,119,255,0.6)' }}
+                style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00E5FF 58%, #FF1493 100%)', boxShadow: '0 6px 24px rgba(0,119,255,0.25)' }}
+                whileHover={{ scale: 1.04, boxShadow: '0 10px 36px rgba(0,119,255,0.35)' }}
                 whileTap={{ scale: 0.96 }}>
                 Shop {flavorCount} Flavors
               </motion.a>
@@ -95,8 +95,7 @@ export default function HeroSection() {
                 className="px-8 md:px-10 py-3 md:py-4 rounded-2xl font-headline text-base md:text-lg text-center"
                 style={{
                   color: '#0077FF',
-                  background: 'rgba(0,119,255,0.08)',
-                  border: '1.5px solid rgba(0,119,255,0.3)',
+                  background: 'rgba(0,119,255,0.06)',
                 }}
                 whileHover={{ scale: 1.04, background: 'rgba(0,119,255,0.14)' }}
                 whileTap={{ scale: 0.96 }}>
@@ -104,25 +103,18 @@ export default function HeroSection() {
               </motion.a>
             </motion.div>
 
-            {/* Trust signals - clean inline text, no card box */}
+            {/* Electrolyte quick info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="flex items-center gap-4 md:gap-5">
-              <div className="flex -space-x-2">
-                {['👨‍🦱', '👩‍🦰', '🧑', '👨', '👩'].map((emoji, i) => (
-                  <div key={i} className="w-9 md:w-10 h-9 md:h-10 rounded-full flex items-center justify-center text-sm md:text-base"
-                    style={{ background: 'linear-gradient(135deg, #0077FF, #00D4FF)', border: '2px solid #F5F9FF' }}>
-                    {emoji}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <span className="font-headline text-sm text-blue-900">{BRAND.stats.users} hydrated</span>
-                <span className="mx-2 text-blue-300">·</span>
-                <span className="font-body text-sm text-blue-700">{BRAND.stats.rating} avg</span>
-              </div>
+              className="flex items-center gap-6">
+              {BRAND.electrolytes.map((el) => (
+                <div key={el.symbol} className="text-center">
+                  <div className="font-display text-lg text-blue-900">{el.symbol}</div>
+                  <div className="font-label text-[9px] text-blue-500">{el.name}</div>
+                </div>
+              ))}
             </motion.div>
 
             </motion.div>
@@ -138,48 +130,24 @@ export default function HeroSection() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0 rounded-full opacity-25"
+              className="absolute inset-0 rounded-full opacity-25 hidden md:block"
               style={{
                 background: 'conic-gradient(from 0deg, #0077FF, #FF1493, #FF8C00, #0077FF)',
               }} />
             
-            {/* Product card */}
+            {/* Product image */}
             <motion.div
               animate={{ y: [0, -20, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative w-44 sm:w-52 md:w-60 h-56 sm:h-64 md:h-72 rounded-3xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(145deg, rgba(0,212,255,0.3), rgba(255,20,147,0.15))',
-                border: '2.5px solid rgba(0,200,255,0.7)',
-                backdropFilter: 'blur(20px)',
-                boxShadow: '0 20px 60px rgba(0,119,255,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
-              }}>
-              <div className="text-center">
-                <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 3, repeat: Infinity }} className="text-6xl sm:text-7xl md:text-8xl mb-3">💧</motion.div>
-                <div className="font-display text-blue-900 text-sm md:text-base">STRATA</div>
-                <div className="font-body text-blue-600 text-xs md:text-sm mt-1">Electrolyte Hydration</div>
-              </div>
+              className="relative w-52 sm:w-64 md:w-72 lg:w-80 h-64 sm:h-72 md:h-80 lg:h-96 flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/starta1.png"
+                alt="STRATA Hydration"
+                className="w-full h-full object-contain drop-shadow-2xl"
+              />
             </motion.div>
 
-            {/* Floating electrolyte badges */}
-            {BRAND.electrolytes.map((el, i) => {
-              const positions = [
-                'top-4 right-4 sm:-top-8 sm:-right-8',
-                'bottom-4 left-4 sm:-bottom-8 sm:left-0',
-                'top-1/3 -left-12 sm:-left-16',
-              ];
-              const colors = ['#0077FF', '#00E5FF', '#FF1493'];
-              return (
-                <motion.div
-                  key={el.symbol}
-                  animate={{ y: [0, -20, 0] }}
-                  transition={{ duration: 4 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-                  className={`absolute ${positions[i]} px-3 py-1.5 rounded-full font-label text-xs text-gray-800`}
-                  style={{ background: `${colors[i]}20`, border: `1px solid ${colors[i]}40` }}>
-                  {el.symbol} · {el.name}
-                </motion.div>
-              );
-            })}
             </motion.div>
           </div>
         </div>

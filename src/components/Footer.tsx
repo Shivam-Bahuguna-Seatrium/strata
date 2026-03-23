@@ -52,7 +52,6 @@ export default function Footer() {
       className="relative overflow-hidden"
       style={{
         background: 'linear-gradient(120deg, #0077FF 0%, #00C8FF 52%, #0099FF 100%)',
-        borderTop: '3px solid rgba(255,255,255,0.5)',
       }}
     >
       {/* Subtle animated bubbles */}
@@ -74,7 +73,7 @@ export default function Footer() {
         ))}
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-8 lg:px-16 xl:px-20 py-16 md:py-20">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-10 lg:px-16 xl:px-20 py-16 md:py-24">
 
         {/* Main grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 md:gap-16 mb-16">
@@ -92,9 +91,9 @@ export default function Footer() {
                 transition={{ duration: 3, repeat: Infinity }}
                 className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
                 style={{
-                  background: 'rgba(255,255,255,0.4)',
-                  border: '2px solid rgba(255,255,255,0.9)',
-                  boxShadow: '0 4px 16px rgba(255,255,255,0.4)',
+                  background: 'rgba(255,255,255,0.25)',
+                  border: '2px solid rgba(255,255,255,0.6)',
+                  boxShadow: '0 2px 10px rgba(255,255,255,0.15)',
                 }}
               >
                 <svg width="26" height="30" viewBox="0 0 80 100" fill="none">
@@ -124,10 +123,8 @@ export default function Footer() {
                   whileHover={{ scale: 1.15, y: -4 }}
                   className="w-11 h-11 rounded-full flex items-center justify-center text-lg transition-all"
                   style={{
-                    background: 'rgba(255,255,255,0.25)',
-                    border: `1.5px solid ${s.color}`,
+                    background: 'rgba(255,255,255,0.15)',
                     color: s.color,
-                    boxShadow: `0 3px 10px ${s.color}30`,
                   }}
                 >
                   {s.icon}
@@ -145,7 +142,7 @@ export default function Footer() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.6 }}
             >
-              <h3 className="font-headline text-base text-white mb-8 uppercase tracking-wider pb-3" style={{ borderBottom: `1.5px solid ${col.color}` }}>
+              <h3 className="font-headline text-base text-white mb-8 uppercase tracking-wider pb-3" style={{ borderBottom: `1px solid rgba(255,255,255,0.15)` }}>
                 {col.title}
               </h3>
 
@@ -169,32 +166,26 @@ export default function Footer() {
         {/* Divider */}
         <div className="h-px mb-14 bg-white/20 rounded-full" />
 
-        {/* Stats from brand config */}
+        {/* Electrolytes from brand config */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 rounded-2xl p-8"
+          className="grid grid-cols-3 gap-6 mb-16 rounded-2xl p-8"
           style={{
-            background: 'rgba(255,255,255,0.15)',
-            border: '1px solid rgba(255,255,255,0.3)',
+            background: 'rgba(255,255,255,0.1)',
             backdropFilter: 'blur(10px)',
           }}
         >
-          {[
-            { value: BRAND.stats.users, label: 'Athletes', color: '#FF1493' },
-            { value: BRAND.stats.rating, label: 'Rating', color: '#00E5FF' },
-            { value: BRAND.stats.recommend, label: 'Recommend', color: '#00FF00' },
-            { value: BRAND.stats.sold, label: 'Sticks Sold', color: '#FFD700' },
-          ].map((s) => (
+          {BRAND.electrolytes.map((el) => (
             <motion.div
-              key={s.label}
+              key={el.symbol}
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 3, repeat: Infinity, delay: Math.random() * 0.5 }}
               className="text-center"
             >
-              <div className="font-display text-3xl mb-2" style={{ color: s.color }}>{s.value}</div>
-              <div className="font-label text-sm text-white/85">{s.label}</div>
+              <div className="font-display text-3xl mb-2 text-white">{el.symbol}</div>
+              <div className="font-label text-sm text-white/85">{el.name}</div>
             </motion.div>
           ))}
         </motion.div>

@@ -6,9 +6,9 @@ import { useInView } from 'framer-motion';
 
 const steps = [
   { num: '01', title: 'Tear & Pour', desc: 'Tear open a STRATA stick pack. Pour into 300-400ml cold water. Electrolytes dissolve instantly.', icon: '\ud83e\uddea', color: '#00E5FF', science: 'Powder = faster dissolution than tablets' },
-  { num: '02', title: 'Rapid Absorption', desc: 'Sodium and Potassium enter your bloodstream within 15 minutes. Cells begin rehydrating at the molecular level.', icon: '\u26a1', color: '#FF1493', science: 'Na drives osmotic absorption' },
+  { num: '02', title: 'Rapid Absorption', desc: 'Sodium and Potassium enter your bloodstream quickly. Cells begin rehydrating at the molecular level.', icon: '\u26a1', color: '#FF1493', science: 'Na drives osmotic absorption' },
   { num: '03', title: 'Baseline Restored', desc: 'Energy, focus, and mood return to peak. No sugar spike, no crash. Proper fluid balance.', icon: '\ud83d\ude80', color: '#00FF00', science: 'Electrolyte balance = nerve signaling' },
-  { num: '04', title: 'Sustained Performance', desc: 'Anti-inflammatory compounds activate recovery. Magnesium relaxes muscles. Perform better, longer.', icon: '\ud83d\udcaa', color: '#FFD700', science: 'Mg + K = recovery + energy' },
+  { num: '04', title: 'Sustained Performance', desc: 'Magnesium supports muscle relaxation and energy production. Potassium regulates muscle function. Perform better, longer.', icon: '\ud83d\udcaa', color: '#FFD700', science: 'Mg + K = recovery + energy' },
 ];
 
 function StepCard({ step, i }: { step: typeof steps[0]; i: number }) {
@@ -20,10 +20,9 @@ function StepCard({ step, i }: { step: typeof steps[0]; i: number }) {
       initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
       transition={{ delay: i * 0.15, duration: 0.6 }}
-      className="relative rounded-2xl p-5 md:p-6"
+      className="relative rounded-2xl p-6 md:p-8"
       style={{
-        background: `linear-gradient(150deg, ${step.color}12 0%, rgba(255,255,255,0.96) 50%)`,
-        border: `1.5px solid ${step.color}25`,
+        background: `linear-gradient(150deg, ${step.color}08 0%, rgba(255,255,255,0.98) 50%)`,
         minHeight: '160px',
       }}>
 
@@ -31,8 +30,7 @@ function StepCard({ step, i }: { step: typeof steps[0]; i: number }) {
         <div className="flex-shrink-0">
           <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center text-3xl md:text-4xl"
             style={{
-              background: `${step.color}10`,
-              border: `1.5px solid ${step.color}30`,
+              background: `${step.color}08`,
             }}>
             {step.icon}
             <div className="absolute -bottom-1 -right-1 font-display text-xs md:text-sm" style={{ color: step.color }}>
@@ -61,19 +59,19 @@ export default function HowItWorks() {
           <motion.div className="section-header"
             initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
             <span className="font-label inline-block mb-5 px-4 py-2 rounded-full"
-              style={{ color: '#00D4FF', background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)' }}>
+              style={{ color: '#00D4FF', background: 'rgba(0,212,255,0.06)' }}>
               The STRATA Effect
             </span>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-5 leading-tight">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-6 md:mb-8 leading-tight text-center">
               From Dehydrated<br />
               <span className="gradient-neon">To Peak Performance</span>
             </h2>
-            <p className="font-body text-base md:text-lg text-blue-700/75 max-w-2xl mx-auto">
+            <p className="font-body text-base md:text-lg text-blue-700/75 max-w-2xl mx-auto text-center">
               Proper hydration isn&apos;t about drinking more water. It&apos;s about locking it in with electrolytes.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {steps.map((step, i) => (
               <StepCard key={step.num} step={step} i={i} />
             ))}

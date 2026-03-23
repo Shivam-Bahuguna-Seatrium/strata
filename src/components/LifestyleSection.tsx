@@ -27,10 +27,10 @@ export default function LifestyleSection() {
         <motion.div className="section-header"
           initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
           <span className="font-label inline-block mb-5 px-4 py-2 rounded-full"
-            style={{ color: '#0077FF', background: 'rgba(0,119,255,0.08)', border: '1px solid rgba(0,119,255,0.2)' }}>
+            style={{ color: '#0077FF', background: 'rgba(0,119,255,0.06)' }}>
             Daily Hydration
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-5">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-6 md:mb-8 text-center">
             {BRAND.subTagline}<br />
             <span className="gradient-neon">{BRAND.tagline}</span>
           </h2>
@@ -58,12 +58,12 @@ export default function LifestyleSection() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.6 }}
                   className="relative rounded-2xl overflow-hidden group cursor-default"
-                  style={{ background: m.bg, border: '1.5px solid rgba(0,119,255,0.15)', minHeight: '340px' }}
+                  style={{ background: m.bg, minHeight: '360px', borderRadius: '20px' }}
                   whileHover={{ y: -6 }}
                 >
                   <div className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-100 opacity-90"
                     style={{ background: m.gradient }} />
-                  <div className="relative z-10 flex flex-col justify-between h-full p-7" style={{ minHeight: '340px' }}>
+                  <div className="relative z-10 flex flex-col justify-between h-full p-8 md:p-9" style={{ minHeight: '360px' }}>
                     <motion.div className="text-5xl"
                       animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: i * 0.4 }}>
                       {m.emoji}

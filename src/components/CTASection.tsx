@@ -16,7 +16,7 @@ export default function CTASection() {
             animate={{ scale: [0.6, 2.5], opacity: [0.15, 0] }}
             transition={{ duration: 4.5, repeat: Infinity, delay: i * 0.9, ease: 'easeOut' }}
             className="absolute w-80 h-80 rounded-full"
-            style={{ border: '1px solid rgba(0,119,255,0.15)' }}
+            style={{ background: 'rgba(0,119,255,0.06)' }}
           />
         ))}
         <div className="absolute w-[600px] h-[600px] rounded-full"
@@ -24,7 +24,7 @@ export default function CTASection() {
       </div>
 
       <div className="relative z-10 section-inner text-center">
-        <div className="w-full max-w-4xl mx-auto px-6 py-12 md:px-12 md:py-16">
+        <div className="w-full max-w-4xl mx-auto px-6 py-16 md:px-14 md:py-20">
         {/* Mascot */}
         <motion.div
           animate={{ y: [0, -12, 0] }}
@@ -54,29 +54,29 @@ export default function CTASection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="space-y-8"
+          className="flex flex-col items-center space-y-10"
         >
-          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl text-blue-900 leading-[1]">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-blue-900 leading-[1.1] text-center">
             {BRAND.subTagline}<br />
             <span className="gradient-neon">{BRAND.tagline}</span>
           </h2>
 
-          <p className="font-body text-lg md:text-xl text-blue-800/70 max-w-xl mx-auto leading-relaxed">
+          <p className="font-body text-lg md:text-xl text-blue-800/70 max-w-xl leading-relaxed text-center">
             {BRAND.antiSugar} {BRAND.science}
           </p>
 
-          {/* Dehydration effects - clean tags, no heavy boxes */}
-          <div className="flex flex-wrap justify-center gap-2.5 max-w-2xl mx-auto">
+          {/* Dehydration effects */}
+          <div className="flex flex-wrap justify-center gap-2.5 md:gap-3 max-w-2xl">
             {BRAND.dehydrationEffects.map((effect) => (
               <span key={effect} className="font-label px-4 py-2 rounded-full text-[11px]"
-                style={{ background: 'rgba(255,20,147,0.08)', color: '#FF1493', border: '1px solid rgba(255,20,147,0.2)' }}>
+                style={{ background: 'rgba(255,20,147,0.06)', color: '#FF1493' }}>
                 {effect}
               </span>
             ))}
           </div>
 
-          <p className="font-body text-blue-600/70 text-base max-w-lg mx-auto">
-            Join {BRAND.stats.users} people who chose science over sugar. {flavorCount} flavors. Zero compromise.
+          <p className="font-body text-blue-600/70 text-base max-w-lg text-center">
+            Choose science over sugar. {flavorCount} flavors. Zero compromise.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
@@ -85,7 +85,7 @@ export default function CTASection() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
               className="inline-block px-12 py-4 rounded-2xl text-lg font-headline text-white transition-all"
-              style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00D4FF 56%, #FF1493 100%)', boxShadow: '0 8px 30px rgba(0,119,255,0.35)' }}
+              style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00D4FF 56%, #FF1493 100%)', boxShadow: '0 6px 24px rgba(0,119,255,0.2)' }}
             >
               Shop STRATA &rarr;
             </motion.a>

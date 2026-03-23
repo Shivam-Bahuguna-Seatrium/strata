@@ -17,7 +17,7 @@ const sora = Sora({
 export const metadata: Metadata = {
   title: "STRATA HYDRATION | Electrolyte Drink Mix",
   description: "Electrolyte powered hydration designed for daily performance. 0g Sugar, 3x Hydration, Low Calories. Fuel your day with STRATA Hydration.",
-  keywords: ["hydration", "electrolyte", "drink mix", "watermelon", "sugar free", "vegan"],
+  keywords: ["hydration", "electrolyte", "drink mix", "citrus lime", "sugar free", "vegan"],
 };
 
 export default function RootLayout({

@@ -34,13 +34,13 @@ export default function TaskFeature() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}>
           <span className="font-label inline-block mb-5 px-4 py-2 rounded-full"
-            style={{ color: '#0077FF', background: 'rgba(0,119,255,0.08)', border: '1px solid rgba(0,119,255,0.2)' }}>
+            style={{ color: '#0077FF', background: 'rgba(0,119,255,0.06)' }}>
             How to Use
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-5">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-blue-900 mb-6 md:mb-8 text-center">
             How to Use <span className="gradient-neon">STRATA</span>
           </h2>
-          <p className="font-body text-base md:text-lg text-blue-700/75 max-w-2xl mx-auto">
+          <p className="font-body text-base md:text-lg text-blue-700/75 max-w-2xl mx-auto text-center">
             Mix, activate, sip, and feel the boost. Simple and repeatable.
           </p>
         </motion.div>
@@ -77,11 +77,10 @@ export default function TaskFeature() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.08, duration: 0.5 }}
-              className="rounded-2xl p-5 md:p-6 snap-start shrink-0 w-[88%] sm:w-[66%] lg:w-[38%] xl:w-[30%]"
+              className="rounded-2xl p-6 md:p-8 snap-start shrink-0 w-[88%] sm:w-[66%] lg:w-[38%] xl:w-[30%]"
               style={{
-                background: `linear-gradient(152deg, ${card.color}12 0%, rgba(255,255,255,0.96) 50%)`,
-                border: `1.5px solid ${card.color}25`,
-                minHeight: '270px',
+                background: `linear-gradient(152deg, ${card.color}08 0%, rgba(255,255,255,0.98) 50%)`,
+                minHeight: '290px',
               }}
             >
               <div className="mb-4">
@@ -98,8 +97,7 @@ export default function TaskFeature() {
                 onClick={() => setDone((prev) => ({ ...prev, [card.title]: !prev[card.title] }))}
                 className="w-full text-left rounded-xl px-3 py-2.5 transition-all font-headline text-sm text-blue-900"
                 style={{
-                  background: done[card.title] ? 'rgba(0,119,255,0.1)' : 'rgba(255,255,255,0.6)',
-                  border: done[card.title] ? '1px solid rgba(0,119,255,0.3)' : '1px solid rgba(0,119,255,0.12)',
+                  background: done[card.title] ? 'rgba(0,119,255,0.08)' : 'rgba(255,255,255,0.5)',
                 }}
               >
                 {done[card.title] ? '\u2713 Complete' : '\u25cb Mark complete'}

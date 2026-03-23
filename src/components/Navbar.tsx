@@ -39,17 +39,15 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-hidden"
         style={scrolled
           ? {
-              background: 'radial-gradient(circle at 12% 22%, rgba(255,255,255,0.28) 0%, transparent 24%), radial-gradient(circle at 82% 18%, rgba(255,255,255,0.22) 0%, transparent 20%), linear-gradient(120deg, #0077FF 0%, #00C8FF 52%, #0099FF 100%)',
+              background: 'linear-gradient(120deg, #0077FF 0%, #00C8FF 52%, #0099FF 100%)',
               backdropFilter: 'blur(20px)',
-              borderBottom: '2px solid rgba(170, 240, 255, 0.95)',
-              padding: '14px 0',
-              boxShadow: '0 10px 50px rgba(0, 119, 255, 0.45), inset 0 1px 0 rgba(255,255,255,0.22)'
+              padding: '12px 0',
+              boxShadow: '0 4px 30px rgba(0, 119, 255, 0.18)'
             }
           : {
-              background: 'radial-gradient(circle at 10% 24%, rgba(255,255,255,0.24) 0%, transparent 22%), radial-gradient(circle at 78% 22%, rgba(255,255,255,0.2) 0%, transparent 24%), linear-gradient(120deg, rgba(0,119,255,0.96) 0%, rgba(0,200,255,0.94) 50%, rgba(0,153,255,0.96) 100%)',
-              borderBottom: '2px solid rgba(160, 235, 255, 0.85)',
-              padding: '18px 0',
-              boxShadow: '0 8px 32px rgba(0, 119, 255, 0.32), inset 0 1px 0 rgba(255,255,255,0.2)'
+              background: 'linear-gradient(120deg, rgba(0,119,255,0.96) 0%, rgba(0,200,255,0.94) 50%, rgba(0,153,255,0.96) 100%)',
+              padding: '16px 0',
+              boxShadow: '0 2px 20px rgba(0, 119, 255, 0.12)'
             }
         }
       >
@@ -73,7 +71,7 @@ export default function Navbar() {
         <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-8 lg:px-16 xl:px-20 flex items-center justify-between">
           <motion.a href="#" className="flex items-center gap-3" whileHover={{ scale: 1.04 }}>
             <div className="relative w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ background: 'linear-gradient(145deg, rgba(255,255,255,0.26), rgba(255,255,255,0.08))', border: '1.5px solid rgba(180,240,255,0.95)', boxShadow: '0 4px 18px rgba(0, 120, 255, 0.45)' }}>
+              style={{ background: 'rgba(255,255,255,0.15)' }}>
               <svg width="24" height="30" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M40 5C40 5 10 45 10 65C10 82 23 95 40 95C57 95 70 82 70 65C70 45 40 5 40 5Z"
@@ -120,8 +118,8 @@ export default function Navbar() {
           </div>
 
           <motion.a href="#product"
-            className="hidden md:inline-block px-7 py-2.5 rounded-full text-sm font-bold text-white glow-coral transition-all hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #FF5A5A 0%, #E03E3E 100%)' }}
+            className="hidden md:inline-block px-7 py-2.5 rounded-full text-sm font-bold text-white transition-all hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, #FF5A5A 0%, #E03E3E 100%)', boxShadow: '0 4px 16px rgba(255,90,90,0.25)' }}
             whileTap={{ scale: 0.95 }}>
             BUY NOW
           </motion.a>
@@ -143,14 +141,14 @@ export default function Navbar() {
         {mobileOpen && (
           <motion.div initial={{ opacity: 0, x: -300 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -300 }} transition={{ duration: 0.4 }}
             className="fixed inset-y-0 left-0 z-40 w-80 flex flex-col pt-28 px-6 overflow-y-auto md:hidden"
-            style={{ background: 'linear-gradient(170deg, #0077FF 0%, #00A8FF 50%, #00D4FF 100%)', boxShadow: 'inset -2px 0 20px rgba(0,0,0,0.1)' }}>
+            style={{ background: 'linear-gradient(170deg, #0077FF 0%, #00A8FF 50%, #00D4FF 100%)' }}>
             <div className="flex flex-col gap-3">
               {navLinks.map((link, i) => (
                 <motion.a key={link.label} href={link.href}
                   initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
                   onClick={() => setMobileOpen(false)}
                   className="text-xl font-extrabold text-white hover:text-yellow-200 transition-colors py-3 px-4 rounded-lg"
-                  style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}>
+                  style={{ background: 'rgba(255,255,255,0.1)' }}>
                   {link.label}
                 </motion.a>
               ))}

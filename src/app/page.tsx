@@ -40,7 +40,7 @@ export default function Home() {
       {/* Sections */}
       <HeroSection />
 
-      <div className="relative z-10 main-stack space-y-10 md:space-y-14 lg:space-y-16">
+      <div className="relative z-10 main-stack space-y-16 md:space-y-20 lg:space-y-24">
         <ProductShowcase />
         <BenefitsSection />
         <HowItWorks />
