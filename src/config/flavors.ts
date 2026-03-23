@@ -22,8 +22,8 @@ export interface Flavor {
 
 export const FLAVORS: Flavor[] = [
   {
-    id: 'watermelon-rush',
-    name: 'Watermelon Rush',
+    id: 'watermelon-slush',
+    name: 'Watermelon Slush',
     emoji: '🍉',
     color: '#FF1493',
     stat: '3.2K mg',
