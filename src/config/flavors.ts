@@ -60,75 +60,10 @@ export const FLAVORS: Flavor[] = [
     description: 'Mixed berry antioxidant blend. Tastes like dessert, works like science.',
     available: true,
   },
-//   {
-//     id: 'citrus-glow',
-//     name: 'Citrus Glow',
-//     emoji: '🍊',
-//     color: '#FF5F00',
-//     stat: '2.8K mg',
-//     benefit: 'Morning hydration + Vitamin C boost',
-//     badge: 'New',
-//     price: 15,
-//     tagline: 'Your morning glow-up',
-//     description: 'Orange-grapefruit with 100% daily Vitamin C. Replace OJ, keep the glow.',
-//     available: true,
-//   },
-// //   {
-//     id: 'grape-surge',
-//     name: 'Grape Surge',
-//     emoji: '🍇',
-//     color: '#00E5FF',
-//     stat: '3.0K mg',
-//     benefit: 'Smooth, sustained hydration',
-//     badge: 'Classic',
-//     price: 15,
-//     tagline: 'Smooth operator',
-//     description: 'Cool grape with magnesium for all-day calm energy. Smooth and steady.',
-//     available: true,
-//   },
-//   {
-//     id: 'lemon-zest',
-//     name: 'Lemon Zest',
-//     emoji: '🍋',
-//     color: '#00FF00',
-//     stat: '2.7K mg',
-//     benefit: 'Sharp, clean, and refreshing',
-//     badge: 'Natural',
-//     price: 15,
-//     tagline: 'Clean and sharp',
-//     description: 'Tart lemon with a hint of ginger. Zero sugar, maximum freshness.',
-//     available: true,
-//   },
-
-  // ──────────────────────────────────────────────
-  // ADD NEW FLAVORS BELOW — just copy a block above
-  // and modify. All components will pick it up.
-  // ──────────────────────────────────────────────
-
-  // Example (uncomment to activate):
-  // {
-  //   id: 'mint-chill',
-  //   name: 'Mint Chill',
-  //   emoji: '🌿',
-  //   color: '#10B981',
-  //   stat: '2.9K mg',
-  //   benefit: 'Cooling menthol hydration',
-  //   badge: 'Coming Soon',
-  //   price: 15,
-  //   tagline: 'Ice cold clarity',
-  //   description: 'Peppermint with eucalyptus. Cold-brew your focus.',
-  //   available: false,
-  // },
 ];
 
 /** Only flavors marked available */
 export const getActiveFlavors = () => FLAVORS.filter(f => f.available);
-
-/** Get a flavor by its id */
-export const getFlavorById = (id: string) => FLAVORS.find(f => f.id === id);
-
-/** Festival color palette derived from active flavors */
-export const getFlavorColors = () => getActiveFlavors().map(f => f.color);
 
 /** Brand constants */
 export const BRAND = {
@@ -143,16 +78,4 @@ export const BRAND = {
     sugar: '0g',
     calories: 'Low',
   },
-  electrolytes: [
-    { symbol: 'Na', name: 'Sodium', role: 'Maintains blood volume, supports nerve signaling, retains fluid in circulation' },
-    { symbol: 'K', name: 'Potassium', role: 'Regulates fluid inside cells, supports muscle and nerve function' },
-    { symbol: 'Mg', name: 'Magnesium', role: 'Supports muscle relaxation, energy production (ATP), nerve stability' },
-  ],
-  dehydrationEffects: [
-    'Fatigue & low energy',
-    'Reduced concentration',
-    'Headaches',
-    'Mood changes',
-    'Slower reaction time',
-  ],
 } as const;

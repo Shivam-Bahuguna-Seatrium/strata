@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
+import ClientShell from "@/components/ClientShell";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${sora.variable} antialiased`}>
-        {children}
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );

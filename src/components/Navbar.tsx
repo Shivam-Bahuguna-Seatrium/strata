@@ -2,14 +2,16 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const navLinks = [
-  { label: 'Product', href: '#product' },
-  { label: 'Benefits', href: '#benefits' },
-  { label: 'How It Works', href: '#how-it-works' },
-  { label: 'How to Use', href: '#how-to-use' },
-  { label: 'Ingredients', href: '#ingredients' },
-  { label: 'Reviews', href: '#reviews' },
+  { label: 'Fuel', href: '/' },
+  { label: 'Hydration', href: '/hydration' },
+  { label: 'Boost', href: '/boost' },
+  { label: 'Science', href: '/science' },
+  { label: 'Sip', href: '/sip' },
+  { label: 'Voices', href: '/voices' },
+  { label: 'Refuel', href: '/refuel' },
 ];
 
 export default function Navbar() {
@@ -22,148 +24,400 @@ export default function Navbar() {
     const onScroll = () => {
       const currentY = window.scrollY;
       setScrolled(currentY > 40);
-      setShowNavbar(currentY < 80 || currentY < lastScrollYRef.current);
+      setShowNavbar(currentY < 80 || currentY < lastScrollYRef.current || mobileOpen);
       lastScrollYRef.current = currentY;
     };
-
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [mobileOpen]);
 
   return (
     <>
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
-        animate={showNavbar ? { y: 0, opacity: 1 } : { y: -120, opacity: 1 }}
+        animate={showNavbar || mobileOpen ? { y: 0, opacity: 1 } : { y: -120, opacity: 1 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-hidden"
-        style={scrolled
-          ? {
-              background: 'linear-gradient(120deg, #0077FF 0%, #00C8FF 52%, #0099FF 100%)',
-              backdropFilter: 'blur(20px)',
-              padding: '12px 0',
-              boxShadow: '0 4px 30px rgba(0, 119, 255, 0.18)'
-            }
-          : {
-              background: 'linear-gradient(120deg, rgba(0,119,255,0.96) 0%, rgba(0,200,255,0.94) 50%, rgba(0,153,255,0.96) 100%)',
-              padding: '16px 0',
-              boxShadow: '0 2px 20px rgba(0, 119, 255, 0.12)'
-            }
-        }
+        className="fixed top-0 left-0 right-0 z-50 h-20 overflow-hidden"
+        style={{
+          background: scrolled
+            ? 'linear-gradient(120deg, #0077FF 0%, #00C8FF 52%, #0099FF 100%)'
+            : 'linear-gradient(120deg, rgba(0,119,255,0.96) 0%, rgba(0,200,255,0.94) 50%, rgba(0,153,255,0.96) 100%)',
+          backdropFilter: scrolled ? 'blur(20px)' : undefined,
+          boxShadow: scrolled ? '0 4px 30px rgba(0,119,255,0.18)' : '0 2px 20px rgba(0,119,255,0.12)',
+        }}
       >
-        <div className="pointer-events-none absolute inset-0 opacity-90">
-          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-            <motion.span
-              key={i}
-              className="absolute rounded-full bg-white/35"
-              style={{
-                width: `${6 + (i % 4) * 6}px`,
-                height: `${6 + (i % 4) * 6}px`,
-                left: `${6 + i * 14}%`,
-                top: `${16 + (i % 3) * 24}%`,
-              }}
-              animate={{ y: [0, -10, 0], x: [0, 4, 0], opacity: [0.2, 0.72, 0.2] }}
-              transition={{ duration: 2 + (i % 3) * 0.8, repeat: Infinity, ease: 'easeInOut', delay: i * 0.15 }}
-            />
-          ))}
-        </div>
+        {/* ── Navbar bubbles ── */}
+        {[
+          { size: 12, left: '8%', delay: 0, dur: 4 },
+          { size: 8, left: '22%', delay: 1.5, dur: 3.5 },
+          { size: 16, left: '42%', delay: 0.8, dur: 5 },
+          { size: 10, left: '58%', delay: 2.2, dur: 4.2 },
+          { size: 14, left: '72%', delay: 0.3, dur: 4.8 },
+          { size: 6, left: '88%', delay: 1, dur: 3 },
+          { size: 10, left: '35%', delay: 2.8, dur: 3.8 },
+          { size: 8, left: '95%', delay: 1.8, dur: 4.5 },
+        ].map((b, i) => (
+          <motion.div
+            key={`nav-bubble-${i}`}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              width: b.size,
+              height: b.size,
+              left: b.left,
+              bottom: '-4px',
+              background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.55), rgba(255,255,255,0.15) 50%, transparent 70%)',
+              border: '1px solid rgba(255,255,255,0.3)',
+              boxShadow: '0 0 6px rgba(0,200,255,0.25)',
+            }}
+            animate={{
+              y: [0, -(50 + i * 8)],
+              x: [0, (i % 2 === 0 ? 1 : -1) * (5 + i * 2)],
+              opacity: [0, 0.8, 0.5, 0],
+              scale: [0.5, 1, 0.9],
+            }}
+            transition={{
+              duration: b.dur,
+              repeat: Infinity,
+              delay: b.delay,
+              ease: 'easeOut',
+            }}
+          />
+        ))}
 
-        <div className="w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-8 lg:px-16 xl:px-20 flex items-center justify-between">
-          <motion.a href="#" className="flex items-center gap-3" whileHover={{ scale: 1.04 }}>
-            <div className="relative w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.15)' }}>
-              <svg width="24" height="30" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M40 5C40 5 10 45 10 65C10 82 23 95 40 95C57 95 70 82 70 65C70 45 40 5 40 5Z"
-                  fill="url(#miniMascotGrad)"
-                  stroke="rgba(200,245,255,0.95)"
-                  strokeWidth="1.2"
-                />
-                <ellipse cx="30" cy="55" rx="8" ry="12" fill="rgba(255,255,255,0.1)" />
-                <path d="M32 58 Q40 55 48 58" stroke="#0A3A73" strokeWidth="2" fill="none" />
-                <ellipse cx="28" cy="60" rx="9" ry="6" fill="#0B4B94" />
-                <ellipse cx="52" cy="60" rx="9" ry="6" fill="#0B4B94" />
-                <path d="M33 72 Q40 78 47 72" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
-                <defs>
-                  <linearGradient id="miniMascotGrad" x1="40" y1="5" x2="40" y2="95" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#00C8FF" />
-                    <stop offset="45%" stopColor="#38BEFF" />
-                    <stop offset="82%" stopColor="#FF1493" />
-                    <stop offset="100%" stopColor="#0066CC" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <motion.span
-                className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-white/85"
-                animate={{ scale: [1, 1.35, 1], opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+        {/* ── Sparkle dots in navbar ── */}
+        {[
+          { top: '25%', left: '18%', delay: 0.5 },
+          { top: '60%', left: '48%', delay: 2 },
+          { top: '35%', left: '78%', delay: 1 },
+          { top: '50%', left: '92%', delay: 3 },
+        ].map((s, i) => (
+          <motion.div
+            key={`nav-sparkle-${i}`}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              width: 3,
+              height: 3,
+              top: s.top,
+              left: s.left,
+              background: 'white',
+              boxShadow: '0 0 4px 1px rgba(255,255,255,0.5)',
+            }}
+            animate={{
+              opacity: [0, 1, 0],
+              scale: [0.5, 1.5, 0.5],
+            }}
+            transition={{
+              duration: 1.8,
+              repeat: Infinity,
+              delay: s.delay,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+
+        {/* ── Water splash wave at bottom edge ── */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 pointer-events-none"
+          style={{ height: '6px' }}
+        >
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), rgba(0,220,255,0.5), rgba(255,255,255,0.4), transparent)',
+              backgroundSize: '200% 100%',
+            }}
+            animate={{
+              backgroundPosition: ['0% 0%', '200% 0%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
+        </motion.div>
+
+        {/* ── Subtle top shimmer ── */}
+        <div className="absolute top-0 left-0 right-0 h-full pointer-events-none"
+          style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%, transparent 70%, rgba(0,200,255,0.08) 100%)' }} />
+
+        {/* Mobile layout: flex | Desktop: 3-col grid */}
+        <div className="relative z-10 h-full w-full px-6 sm:px-10 lg:px-12 flex md:grid md:grid-cols-[1fr_2fr_1fr] items-center gap-4">
+
+          {/* Mobile hamburger — leftmost on mobile */}
+          <button onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden order-first w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50 shrink-0">
+            {[0,1,2].map(i => (
+              <motion.span key={i}
+                animate={mobileOpen ? (i === 1 ? { opacity: 0 } : { rotate: i === 0 ? 45 : -45, y: i === 0 ? 6 : -6 }) : { rotate: 0, y: 0, opacity: 1 }}
+                className="w-6 h-0.5 rounded-full bg-white" />
+            ))}
+          </button>
+
+          {/* Logo — centered on mobile, left on desktop */}
+          <div className="flex-1 md:flex-none flex items-center justify-center md:justify-center">
+            <motion.a
+              href="/"
+              whileHover={{ scale: 1.04 }}
+            >
+              <Image
+                src="/logo.png"
+                alt="Strata Hydration"
+                width={400}
+                height={100}
+                className="h-[5rem] w-auto object-contain"
+                priority
               />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-xl font-black tracking-wider" style={{ color: '#FFFFFF' }}>STRATA</span>
-              <span className="text-[10px] font-semibold tracking-[0.18em] text-white/80 uppercase">Hydration</span>
-            </div>
-          </motion.a>
+            </motion.a>
+          </div>
 
-          <div className="hidden md:flex items-center gap-11 lg:gap-12">
+          {/* Center — Nav links (desktop only) */}
+          <div className="hidden md:flex items-center justify-center gap-6 lg:gap-8">
             {navLinks.map(link => (
               <motion.a key={link.label} href={link.href}
-                className="text-sm font-semibold text-white/90 hover:text-yellow-100 transition-colors duration-200 relative group"
+                className="font-cursive text-base lg:text-lg text-white tracking-wide leading-none hover:text-white/60 transition-colors relative group"
                 whileHover={{ y: -1 }}>
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-px transition-all duration-300 group-hover:w-full"
-                  style={{ background: '#FFFFFF' }} />
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full" />
               </motion.a>
             ))}
           </div>
 
-          <motion.a href="#product"
-            className="hidden md:inline-block px-7 py-2.5 rounded-full text-sm font-bold text-white transition-all hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #FF5A5A 0%, #E03E3E 100%)', boxShadow: '0 4px 16px rgba(255,90,90,0.25)' }}
-            whileTap={{ scale: 0.95 }}>
-            BUY NOW
-          </motion.a>
-
-          <button onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50 relative">
-            {[0,1,2].map(i => (
-              <motion.span key={i}
-                animate={mobileOpen ? (i === 1 ? { opacity: 0 } : { rotate: i === 0 ? 45 : -45, y: i === 0 ? 6 : -6 }) : { rotate: 0, y: 0, opacity: 1 }}
-                className="w-6 h-0.5 rounded-full transition-colors" style={{ background: '#FFFFFF' }} />
-            ))}
-          </button>
+          {/* Right — icons + buy now (visible on both mobile & desktop) */}
+          <div className="flex items-center justify-end md:justify-center gap-5 md:gap-7 shrink-0">
+            <motion.button
+              className="text-white/90 hover:text-white transition-colors"
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Search"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </motion.button>
+            <motion.button
+              className="text-white/90 hover:text-white transition-colors"
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Profile"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </motion.button>
+            <motion.a href="/hydration"
+              className="px-4 py-1.5 md:px-6 md:py-2 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-white/15 text-white hover:bg-white hover:text-blue-600 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}>
+              Buy Now
+            </motion.a>
+          </div>
         </div>
       </motion.nav>
 
-      <div className="h-[84px] md:h-[82px] w-full" aria-hidden="true" />
+      <div className="h-20 w-full" aria-hidden="true" />
 
+      {/* Mobile sidebar — creative water-themed */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div initial={{ opacity: 0, x: -300 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -300 }} transition={{ duration: 0.4 }}
-            className="fixed inset-y-0 left-0 z-40 w-80 flex flex-col pt-28 px-6 overflow-y-auto md:hidden"
-            style={{ background: 'linear-gradient(170deg, #0077FF 0%, #00A8FF 50%, #00D4FF 100%)' }}>
-            <div className="flex flex-col gap-3">
-              {navLinks.map((link, i) => (
-                <motion.a key={link.label} href={link.href}
-                  initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-xl font-extrabold text-white hover:text-yellow-200 transition-colors py-3 px-4 rounded-lg"
-                  style={{ background: 'rgba(255,255,255,0.1)' }}>
-                  {link.label}
-                </motion.a>
-              ))}
-              <motion.a href="#product" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                onClick={() => setMobileOpen(false)}
-                className="mt-4 inline-block px-10 py-4 rounded-full text-lg font-black text-blue-900 text-center transition-all"
-                style={{ background: 'linear-gradient(135deg, #FFC107 0%, #FFD700 100%)', boxShadow: '0 8px 25px rgba(255, 200, 0, 0.4)' }}
-                whileHover={{ scale: 1.05 }}>
-                🛒 BUY NOW
-              </motion.a>
+          <motion.div
+            initial={{ opacity: 0, x: '-100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '-100%' }}
+            transition={{ duration: 0.4, ease: [0.25, 0.8, 0.25, 1] }}
+            className="fixed inset-y-0 left-0 z-40 w-[80vw] max-w-[320px] flex flex-col overflow-hidden md:hidden"
+            style={{ background: 'linear-gradient(120deg, #0077FF 0%, #00C8FF 52%, #0099FF 100%)' }}
+          >
+            {/* ── Visible rising bubbles ── */}
+            {[
+              { size: 40, left: '15%', delay: 0, dur: 6 },
+              { size: 24, left: '55%', delay: 1.2, dur: 5 },
+              { size: 32, left: '75%', delay: 2.5, dur: 7 },
+              { size: 18, left: '30%', delay: 0.8, dur: 4.5 },
+              { size: 28, left: '65%', delay: 3, dur: 5.5 },
+              { size: 14, left: '45%', delay: 1.8, dur: 4 },
+              { size: 36, left: '85%', delay: 0.5, dur: 6.5 },
+              { size: 20, left: '10%', delay: 2, dur: 5 },
+              { size: 16, left: '50%', delay: 3.5, dur: 4.2 },
+              { size: 22, left: '25%', delay: 1.5, dur: 5.8 },
+            ].map((b, i) => (
+              <motion.div
+                key={`bubble-${i}`}
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: b.size,
+                  height: b.size,
+                  left: b.left,
+                  bottom: '-8%',
+                  background: 'radial-gradient(circle at 35% 25%, rgba(255,255,255,0.5), rgba(255,255,255,0.15) 50%, transparent 70%)',
+                  border: '1.5px solid rgba(255,255,255,0.35)',
+                  boxShadow: '0 0 8px rgba(0,200,255,0.3), inset 0 -4px 8px rgba(255,255,255,0.1)',
+                }}
+                animate={{
+                  y: [0, -(600 + i * 40)],
+                  x: [0, (i % 2 === 0 ? 1 : -1) * (15 + i * 4)],
+                  opacity: [0, 0.85, 0.7, 0],
+                  scale: [0.6, 1, 1.05, 0.9],
+                }}
+                transition={{
+                  duration: b.dur,
+                  repeat: Infinity,
+                  delay: b.delay,
+                  ease: 'easeOut',
+                }}
+              />
+            ))}
+
+            {/* ── Floating sparkle dots ── */}
+            {[
+              { top: '20%', left: '80%', delay: 0.5 },
+              { top: '45%', left: '70%', delay: 1.5 },
+              { top: '65%', left: '85%', delay: 2.5 },
+              { top: '30%', left: '90%', delay: 0 },
+              { top: '80%', left: '60%', delay: 3 },
+            ].map((s, i) => (
+              <motion.div
+                key={`sparkle-${i}`}
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: 4,
+                  height: 4,
+                  top: s.top,
+                  left: s.left,
+                  background: 'white',
+                  boxShadow: '0 0 6px 2px rgba(255,255,255,0.6)',
+                }}
+                animate={{
+                  opacity: [0, 1, 0],
+                  scale: [0.5, 1.5, 0.5],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: s.delay,
+                  ease: 'easeInOut',
+                }}
+              />
+            ))}
+
+            {/* ── Glowing water ripple ring ── */}
+            <motion.div
+              className="absolute pointer-events-none rounded-full"
+              style={{
+                width: 180,
+                height: 180,
+                bottom: '-30px',
+                right: '-40px',
+                border: '2px solid rgba(255,255,255,0.15)',
+                boxShadow: '0 0 40px rgba(0,200,255,0.2), 0 0 80px rgba(0,200,255,0.1)',
+              }}
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.div
+              className="absolute pointer-events-none rounded-full"
+              style={{
+                width: 120,
+                height: 120,
+                top: '15%',
+                right: '-30px',
+                border: '1.5px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 0 30px rgba(0,200,255,0.15)',
+              }}
+              animate={{
+                scale: [1.1, 0.9, 1.1],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            />
+
+            {/* ── Top gradient glow ── */}
+            <div className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
+              style={{ background: 'linear-gradient(180deg, rgba(0,220,255,0.3) 0%, rgba(0,150,255,0.1) 50%, transparent 100%)' }} />
+
+            {/* ── Bottom ocean floor glow ── */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+              style={{ background: 'linear-gradient(0deg, rgba(0,100,200,0.4) 0%, rgba(0,180,255,0.15) 40%, transparent 100%)' }} />
+
+            {/* ── Content ── */}
+            <div className="relative z-10 flex flex-col h-full" style={{ paddingTop: '7.5rem', paddingLeft: '2.5rem', paddingRight: '1rem' }}>
+
+              {/* Water drop icon */}
+              <motion.div
+                className="mb-6"
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="rgba(255,255,255,0.5)" />
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="0.5" />
+                </svg>
+              </motion.div>
+
+              {/* Nav links */}
+              <div className="flex flex-col gap-2">
+                {navLinks.map((link, i) => (
+                  <motion.a
+                    key={link.label}
+                    href={link.href}
+                    initial={{ opacity: 0, x: -40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.07, ease: [0.25, 0.8, 0.25, 1] }}
+                    onClick={() => setMobileOpen(false)}
+                    className="group relative font-cursive text-[1.65rem] text-white/90 hover:text-white transition-all duration-300 py-4 pl-4 pr-4 rounded-2xl hover:bg-white/10"
+                  >
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    {link.label}
+                    <span className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                      style={{ boxShadow: 'inset 0 0 20px rgba(0,200,255,0.15)' }} />
+                  </motion.a>
+                ))}
+              </div>
+
+              {/* Bottom decoration */}
+              <div className="mt-auto pr-2 pb-10">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="flex items-center gap-3 text-white/30"
+                >
+                  <div className="h-px flex-1 bg-white/15" />
+                  <motion.svg
+                    width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                  </motion.svg>
+                  <div className="h-px flex-1 bg-white/15" />
+                </motion.div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                  className="text-center text-white/25 text-xs mt-3 tracking-widest uppercase"
+                >
+                  Stay Hydrated
+                </motion.p>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      {mobileOpen && (<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setMobileOpen(false)} className="fixed inset-0 z-30 md:hidden" style={{ background: 'rgba(0,0,0,0.3)' }} />)}
+
+      {/* Backdrop overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-30 md:hidden bg-black/30"
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }
