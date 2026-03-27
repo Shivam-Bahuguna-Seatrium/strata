@@ -56,6 +56,8 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+const reviewBgImages = ['/field-eng.png', '/DataScience.png', '/boxer.png'];
+
 export default function VoicesSection() {
   return (
     <section id="reviews" className="relative flex flex-col items-center overflow-hidden px-6 sm:px-10 md:px-16 lg:px-20"
@@ -86,7 +88,8 @@ export default function VoicesSection() {
             <span className="hero-line-script text-3xl sm:text-4xl md:text-5xl" style={{ textTransform: 'none' }}>{voicesContent.headingAccent}</span>
           </h2>
           <p className="font-body text-base md:text-lg text-blue-800/70 font-semibold mt-6 max-w-lg tracking-tight">
-            {voicesContent.subtitle}
+            <span className="sm:hidden">Don&apos;t take our word for it.<br />These sippers switched to Strata<br />and never looked back.</span>
+            <span className="hidden sm:inline">{voicesContent.subtitle}</span>
           </p>
         </motion.div>
 
@@ -127,58 +130,65 @@ export default function VoicesSection() {
             {voicesContent.reviewsLabel}
           </motion.p>
 
-          <div className="grid grid-cols-3 gap-3 md:gap-8 w-full">
+          <div className="grid grid-cols-3 gap-4 md:gap-8 w-full">
             {reviews.map((r, i) => (
               <motion.div
                 key={r.name}
                 initial={{ opacity: 0, y: 30, rotate: 0 }}
-                whileInView={{ opacity: 1, y: 0, rotate: r.rotate }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 * i, duration: 0.5, type: 'spring', stiffness: 120 }}
-                whileHover={{ scale: 1.05, rotate: 0, y: -8, zIndex: 10 }}
-                className="relative flex flex-col gap-2 md:gap-4 p-3 md:p-8 rounded-2xl cursor-default"
-                style={{
-                  background: 'rgba(255,255,255,0.75)',
-                  backdropFilter: 'blur(16px)',
-                  boxShadow: `0 8px 32px ${r.color}12, 0 2px 8px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.6)`,
-                  animation: `voiceFloat ${r.floatDuration}s ease-in-out infinite`,
-                }}>
+                className="flex flex-col items-center text-center gap-3 md:gap-4">
 
-                {/* Window dots (macOS style) */}
-                <div className="flex gap-1.5 mb-1">
-                  <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-red-400/70" />
-                  <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-amber-400/70" />
-                  <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-green-400/70" />
-                </div>
+                {/* ── Card (image only) ── */}
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -8, zIndex: 10 }}
+                  className="relative w-full h-20 sm:h-28 md:h-56 lg:h-64 flex items-end justify-center rounded-2xl cursor-default overflow-hidden"
+                  style={{
+                    background: 'rgba(255,255,255,0.75)',
+                    backdropFilter: 'blur(16px)',
+                    boxShadow: `0 8px 32px ${r.color}12, 0 2px 8px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.6)`,
+                    animation: `voiceFloat ${r.floatDuration}s ease-in-out infinite`,
+                  }}>
 
-                {/* Reviewer info */}
-                <div className="flex items-center gap-2 md:gap-4">
-                  <motion.div
-                    className="w-8 h-8 md:w-14 md:h-14 rounded-full flex items-center justify-center text-sm md:text-2xl"
-                    style={{ background: `${r.color}12`, boxShadow: `0 0 0 2px ${r.color}20` }}
-                    whileHover={{ scale: 1.15, rotate: 10 }}
-                    transition={{ type: 'spring', stiffness: 300 }}>
-                    {r.avatar}
-                  </motion.div>
-                  <div className="flex flex-col flex-1 min-w-0 text-left">
-                    <span className="font-body text-[9px] md:text-xs text-blue-800/55 font-medium">{r.role}</span>
+                  {/* Background image */}
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    backgroundImage: `url(${reviewBgImages[i]})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center top',
+                    opacity: 1,
+                  }} />
+
+                  {/* Window dots (macOS style) */}
+                  <div className="absolute top-3 left-3 z-10 flex gap-1.5">
+                    <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-red-400/70" />
+                    <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-amber-400/70" />
+                    <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-green-400/70" />
                   </div>
-                  <span className="font-label text-[8px] md:text-[10px] font-extrabold px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-full shrink-0"
-                    style={{ color: r.color, background: `${r.color}10`, border: `1px solid ${r.color}20` }}>{r.tag}</span>
+
+                  {/* Tag badge */}
+                  <span className="absolute top-3 right-3 z-10 font-label text-[8px] md:text-[10px] font-extrabold px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-full"
+                    style={{ color: r.color, background: `${r.color}15`, border: `1px solid ${r.color}25`, backdropFilter: 'blur(4px)' }}>{r.tag}</span>
+                </motion.div>
+
+                {/* ── Below card: Role + Avatar + Stars + Review + Verified ── */}
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm md:text-xl"
+                    style={{ background: `${r.color}12`, boxShadow: `0 0 0 2px ${r.color}20` }}>
+                    {r.avatar}
+                  </div>
+                  <span className="font-display text-[10px] md:text-sm text-blue-950 font-black">{r.role}</span>
                 </div>
 
-                {/* Stars */}
                 <StarRating rating={r.rating} />
 
-                {/* Review text */}
-                <p className="font-body text-[9px] md:text-sm text-blue-800/70 leading-relaxed text-left font-medium">
+                <p className="font-body text-[9px] md:text-sm text-blue-800/80 leading-relaxed text-center font-semibold px-1">
                   &ldquo;{r.text}&rdquo;
                 </p>
 
-                {/* Verified badge */}
-                <div className="flex items-center gap-1 mt-auto pt-1">
+                <div className="flex items-center gap-1">
                   <span className="text-[9px]">✅</span>
-                  <span className="font-label text-[9px] text-emerald-600/70 font-extrabold tracking-wider uppercase">{voicesContent.verifiedLabel}</span>
+                  <span className="font-label text-[9px] text-emerald-600 font-extrabold tracking-wider uppercase">{voicesContent.verifiedLabel}</span>
                 </div>
               </motion.div>
             ))}

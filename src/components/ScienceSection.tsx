@@ -31,7 +31,9 @@ export default function ScienceSection() {
             {scienceContent.badge}
           </motion.span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-blue-950 leading-tight font-black uppercase tracking-tighter">
-            {scienceContent.heading}{' '}
+            {scienceContent.heading}
+            <br className="sm:hidden" />
+            <span className="hidden sm:inline">{' '}</span>
             <span className="hero-line-script text-3xl sm:text-4xl md:text-5xl" style={{ textTransform: 'none' }}>{scienceContent.headingAccent}</span>
           </h2>
           <p className="font-body text-base md:text-lg text-blue-800/70 font-semibold mt-6 max-w-lg tracking-tight">
@@ -42,11 +44,12 @@ export default function ScienceSection() {
         {/* ── Dehydration effects Strata fixes ── */}
         <div className="flex flex-col items-center gap-6">
           <motion.p
-            className="font-cursive text-xl md:text-2xl text-pink-500/80 font-bold"
+            className="font-cursive text-xl md:text-2xl text-pink-500/80 font-bold text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}>
-            {scienceContent.benefitsLabel}
+            <span className="sm:hidden">What Dehydration Takes —<br />Strata Gives Back</span>
+            <span className="hidden sm:inline">{scienceContent.benefitsLabel}</span>
           </motion.p>
           <motion.div
             className="flex flex-wrap justify-center gap-4 md:gap-5 w-full max-w-4xl"

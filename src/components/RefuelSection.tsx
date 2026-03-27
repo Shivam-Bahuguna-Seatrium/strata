@@ -120,11 +120,14 @@ export default function RefuelSection() {
             📬 Drop Us A Line
           </motion.span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-blue-950 leading-tight font-black uppercase tracking-tighter">
-            Ready To{' '}
+            Ready To
+            <br className="sm:hidden" />
+            <span className="hidden sm:inline">{' '}</span>
             <span className="hero-line-script text-3xl sm:text-4xl md:text-5xl" style={{ textTransform: 'none' }}>Refuel?</span>
           </h2>
           <p className="font-body text-base md:text-lg text-blue-800/70 font-semibold mt-6 max-w-lg tracking-tight">
-            Questions, collabs, or just wanna say hi? Drop a message — we flow right back.
+            <span className="sm:hidden">Questions, collabs, or just wanna say hi?<br />Drop a message — we flow right back.</span>
+            <span className="hidden sm:inline">Questions, collabs, or just wanna say hi? Drop a message — we flow right back.</span>
           </p>
         </motion.div>
 
@@ -154,7 +157,7 @@ export default function RefuelSection() {
             </motion.p>
 
             <div className="flex flex-col gap-3">
-              <label className="font-label text-xs font-extrabold tracking-widest uppercase text-blue-950/70">Your Name</label>
+              <label className="font-label text-xs font-extrabold tracking-widest uppercase text-blue-950/70">👤Your Name</label>
               <motion.div
                 animate={focused === 'name' ? { scale: 1.01 } : { scale: 1 }}
                 transition={{ type: 'spring', stiffness: 300 }}>
@@ -174,7 +177,7 @@ export default function RefuelSection() {
 
             {/* Email */}
             <div className="flex flex-col gap-3">
-              <label className="font-label text-xs font-extrabold tracking-widest uppercase text-blue-950/70">Email</label>
+              <label className="font-label text-xs font-extrabold tracking-widest uppercase text-blue-950/70">📧 Email</label>
               <motion.div
                 animate={focused === 'email' ? { scale: 1.01 } : { scale: 1 }}
                 transition={{ type: 'spring', stiffness: 300 }}>
@@ -194,7 +197,7 @@ export default function RefuelSection() {
 
             {/* Message */}
             <div className="flex flex-col gap-3">
-              <label className="font-label text-xs font-extrabold tracking-widest uppercase text-blue-950/70">Message</label>
+              <label className="font-label text-xs font-extrabold tracking-widest uppercase text-blue-950/70">💬 Message </label>
               <motion.div
                 animate={focused === 'message' ? { scale: 1.01 } : { scale: 1 }}
                 transition={{ type: 'spring', stiffness: 300 }}>
