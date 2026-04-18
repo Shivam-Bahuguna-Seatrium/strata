@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 const navLinks = [
-  { label: 'Fuel', href: '/' },
-  { label: 'Hydration', href: '/hydration' },
+  { label: 'Hydration', href: '/' },
+  { label: 'Fuel', href: '/fuel' },
   { label: 'Boost', href: '/boost' },
   { label: 'Science', href: '/science' },
   { label: 'Sip', href: '/sip' },
@@ -175,7 +175,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center justify-center gap-6 lg:gap-8">
             {navLinks.map(link => (
               <motion.a key={link.label} href={link.href}
-                className="font-cursive text-base lg:text-lg text-white tracking-wide leading-none hover:text-white/60 transition-colors relative group"
+                className="font-cursive text-lg lg:text-xl text-white uppercase tracking-wider leading-none hover:text-white/60 transition-colors relative group"
                 whileHover={{ y: -1 }}>
                 {link.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full" />
@@ -201,7 +201,7 @@ export default function Navbar() {
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </motion.button>
-            <motion.a href="/hydration"
+            <motion.a href="/fuel"
               className="px-4 py-1.5 md:px-6 md:py-2 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-white/15 text-white hover:bg-white hover:text-blue-600 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}>
@@ -364,7 +364,7 @@ export default function Navbar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.07, ease: [0.25, 0.8, 0.25, 1] }}
                     onClick={() => setMobileOpen(false)}
-                    className="group relative font-cursive text-[1.65rem] text-white/90 hover:text-white transition-all duration-300 py-4 pl-4 pr-4 rounded-2xl hover:bg-white/10"
+                    className="group relative font-cursive text-[1.65rem] text-white/90 uppercase tracking-wider hover:text-white transition-all duration-300 py-4 pl-4 pr-4 rounded-2xl hover:bg-white/10"
                   >
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.label}

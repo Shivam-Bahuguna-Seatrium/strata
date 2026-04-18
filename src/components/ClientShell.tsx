@@ -13,9 +13,12 @@ const Mascot = dynamic(() => import('@/components/Mascot'), { ssr: false });
 export default function ClientShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.8,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      syncTouch: true,
+      touchMultiplier: 2,
+      wheelMultiplier: 1,
     });
 
     function raf(time: number) {

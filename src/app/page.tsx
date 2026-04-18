@@ -1,5 +1,5 @@
 import HeroSection from '@/components/HeroSection';
-import HydrationSection from '@/components/HydrationSection';
+import FuelSection from '@/components/FuelSection';
 import BoostSection from '@/components/BoostSection';
 import ScienceSection from '@/components/ScienceSection';
 import SipSection from '@/components/SipSection';
@@ -8,9 +8,9 @@ import RefuelSection from '@/components/RefuelSection';
 
 export default function Home() {
   return (
-    <div className="relative z-10">
+    <div className="relative z-10 flex flex-col gap-3 sm:gap-4 lg:gap-5">
       <HeroSection />
-      <HydrationSection />
+      <FuelSection />
       <BoostSection />
       <ScienceSection />
       <SipSection />

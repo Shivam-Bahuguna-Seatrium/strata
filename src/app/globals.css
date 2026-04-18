@@ -1,5 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@400;500;600;700&family=Bebas+Neue&family=Satisfy&display=swap');
-@import "lenis/dist/lenis.css";
+﻿@import "lenis/dist/lenis.css";
 @import "tailwindcss";
 
 @theme inline {
@@ -37,7 +36,7 @@ html {
 body {
   background: linear-gradient(180deg, #F8FAFF 0%, #EEF3FB 50%, #F8FAFF 100%);
   color: #0A0F1F;
-  font-family: 'Inter', 'DM Sans', 'Outfit', system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-dm-sans), var(--font-outfit), system-ui, sans-serif;
   overflow-x: hidden;
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -55,10 +54,32 @@ section,
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 img, svg {
   content-visibility: auto;
+  will-change: auto;
+}
+
+/* Motion-safe defaults for better performance */
+motion {
+  --motion-reduce-duration: 0ms;
+}
+
+/* Optimize Framer Motion performance */
+[data-framer-motion] {
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+/* Reduce animation jank on slower devices */
+@supports (animation-timing-function: linear) {
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -69,38 +90,38 @@ img, svg {
 
 /* Creative Font Styles */
 .font-display {
-  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: -0.035em;
 }
 
 .font-headline {
-  font-family: 'Outfit', 'Space Grotesk', system-ui;
+  font-family: var(--font-outfit), var(--font-space-grotesk), system-ui;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .font-body {
-  font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-dm-sans), system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 1.7;
 }
 
 .font-accent {
-  font-family: 'Syne', system-ui;
+  font-family: var(--font-syne), system-ui;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .font-cursive {
-  font-family: 'Dancing Script', cursive;
+  font-family: var(--font-caveat), cursive;
   font-weight: 700;
   letter-spacing: 0.01em;
 }
 
 .font-label {
-  font-family: 'Inter', 'Outfit', system-ui;
+  font-family: var(--font-inter), var(--font-outfit), system-ui;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -109,7 +130,7 @@ img, svg {
 
 /* ── Hero Heading Typography ── */
 .hero-line-top {
-  font-family: 'Outfit', 'Space Grotesk', system-ui, sans-serif;
+  font-family: var(--font-outfit), var(--font-space-grotesk), system-ui, sans-serif;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.22em;
@@ -118,16 +139,15 @@ img, svg {
 }
 
 .hero-line-main {
-  font-family: 'Bebas Neue', 'Syne', system-ui, sans-serif;
+  font-family: var(--font-bebas-neue), var(--font-syne), system-ui, sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  background: linear-gradient(135deg, #0044AA 0%, #0077FF 40%, #00D4FF 100%);
+  letter-spacing: 0.03em;
+  line-height: 0.9;
+  background: linear-gradient(180deg, #0B2E5B 0%, #1E5EA5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 2px 12px rgba(0, 119, 255, 0.18));
 }
 
 .hero-line-main span {
@@ -135,21 +155,20 @@ img, svg {
 }
 
 .hero-line-script {
-  font-family: 'Satisfy', 'Dancing Script', cursive;
-  font-weight: 400;
+  font-family: var(--font-caveat), cursive;
+  font-weight: 700;
   letter-spacing: 0.02em;
-  background: linear-gradient(135deg, #00B8FF 0%, #FF1493 100%);
+  background: linear-gradient(135deg, #00D4FF 0%, #00E5FF 50%, #80EEFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 16px rgba(0, 184, 255, 0.3));
 }
 
 .hero-accent-line {
   width: 3rem;
   height: 3px;
   border-radius: 2px;
-  background: linear-gradient(90deg, #FF8C00, #FFB347, transparent);
+  background: linear-gradient(90deg, #FFB347, #FF8C00, transparent);
 }
 
 /* ── Broadcast Ticker Bar ── */
@@ -400,6 +419,30 @@ img, svg {
   margin-right: auto;
   padding-left: clamp(1.5rem, 5vw, 8rem);
   padding-right: clamp(1.5rem, 5vw, 8rem);
+}
+
+/* ── Premium Embla Carousel Styles ── */
+.embla {
+  position: relative;
+  overflow: hidden;
+}
+
+.embla__viewport {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  height: 100%;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (min-width: 1024px) {

@@ -32,8 +32,8 @@ export const metaContent = {
 export const navContent = {
   logoAlt: 'Strata Hydration',
   links: [
-    { label: 'Fuel', href: '/' },
-    { label: 'Hydration', href: '/hydration' },
+    { label: 'Hydration', href: '/' },
+    { label: 'Fuel', href: '/fuel' },
     { label: 'Boost', href: '/boost' },
     { label: 'Science', href: '/science' },
     { label: 'Sip', href: '/sip' },
@@ -52,8 +52,8 @@ export const heroContent = {
   subtitle: 'Natural flavors. Zero sugar. Zero compromise.',
   productAlt: 'STRATA Hydration',
   cta: {
-    primary: { label: '💧 Shop Hydration 💧', href: '#hydration' },
-    secondary: { label: '🧪 The Science 🧪', href: '#science' },
+    primary: { label: 'Shop Now', href: '/fuel' },
+    secondary: { label: 'The Science', href: '#benefits' },
   },
   ticker: [
     '🧊 Zero Sugar',
@@ -348,7 +348,7 @@ export const footerContent = {
       hoverColor: '#00FFFF',
       links: [
         { label: 'Home', href: '/' },
-        { label: 'Hydration', href: '/hydration' },
+        { label: 'Hydration', href: '/fuel' },
         { label: 'Boost', href: '/boost' },
         { label: 'Science', href: '/science' },
         { label: 'Sip', href: '/sip' },
