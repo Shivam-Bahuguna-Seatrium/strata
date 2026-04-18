@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { getActiveFlavors } from '@/config/flavors';
 import { hydrationContent } from '@/config/siteContent';
 
@@ -223,6 +224,24 @@ export default function FuelSection() {
             <p className="max-w-[34ch] font-body text-[13px] font-medium leading-5 text-blue-950/70 sm:text-sm sm:leading-6 lg:text-[14px] lg:leading-6">
               {selected.description}
             </p>
+
+            <Link href={isComingSoon ? '/products' : `/products/${selected.id}`}>
+              <motion.span
+                className="mt-1 inline-flex items-center justify-center rounded-full px-6 py-2.5 font-label text-[11px] font-extrabold uppercase tracking-widest text-white"
+                style={{
+                  background: isComingSoon
+                    ? 'linear-gradient(120deg, rgba(11,46,91,0.35) 0%, rgba(11,46,91,0.55) 100%)'
+                    : `linear-gradient(120deg, ${selected.color}cc 0%, ${selected.color} 100%)`,
+                  boxShadow: isComingSoon
+                    ? '0 10px 26px rgba(11,46,91,0.16)'
+                    : `0 10px 26px ${selected.color}35`,
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {isComingSoon ? `Preview in Shop · ${hydrationContent.comingSoonLabel}` : `${hydrationContent.ctaPrefix} ${selected.name} ${hydrationContent.ctaSuffix}`}
+              </motion.span>
+            </Link>
 
             {/* Stat strip */}
             <div className="grid w-full max-w-xl grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-2.5">

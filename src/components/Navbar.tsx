@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useCartStore } from '@/store/cart';
 
 const navLinks = [
   { label: 'Hydration', href: '/' },
@@ -18,7 +20,13 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const lastScrollYRef = useRef(0);
+  const cartCount = useCartStore((s) => s.itemCount());
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -183,30 +191,45 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right — icons + buy now (visible on both mobile & desktop) */}
+          {/* Right — cart + account + shop */}
           <div className="flex items-center justify-end md:justify-center gap-5 md:gap-7 shrink-0">
-            <motion.button
-              className="text-white/90 hover:text-white transition-colors"
-              whileHover={{ scale: 1.15 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Search"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </motion.button>
-            <motion.button
-              className="text-white/90 hover:text-white transition-colors"
-              whileHover={{ scale: 1.15 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Profile"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </motion.button>
-            <motion.a href="/fuel"
-              className="px-4 py-1.5 md:px-6 md:py-2 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-white/15 text-white hover:bg-white hover:text-blue-600 transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}>
-              Buy Now
-            </motion.a>
+            <Link href="/cart">
+              <motion.div
+                className="relative text-white/90 hover:text-white transition-colors"
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+                aria-label="Cart"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                {mounted && cartCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-2 -right-2 flex items-center justify-center w-4 h-4 rounded-full bg-white text-[9px] font-black text-blue-600"
+                  >
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </motion.span>
+                )}
+              </motion.div>
+            </Link>
+            <Link href="/account/orders">
+              <motion.div
+                className="text-white/90 hover:text-white transition-colors"
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+                aria-label="Account"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 md:w-[20px] md:h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </motion.div>
+            </Link>
+            <Link href="/products">
+              <motion.div
+                className="px-4 py-1.5 md:px-6 md:py-2 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-white/15 text-white hover:bg-white hover:text-blue-600 transition-all"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}>
+                Shop Now
+              </motion.div>
+            </Link>
           </div>
         </div>
       </motion.nav>

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ToastContainer from '@/components/Toast';
 
 const FloatingBubbles = dynamic(() => import('@/components/FloatingBubbles'), { ssr: false });
 const WaterCursor = dynamic(() => import('@/components/WaterCursor'), { ssr: false });
@@ -44,6 +45,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
       <WaterCursor />
       <Mascot />
       <Navbar />
+      <ToastContainer />
 
       <div className="relative z-10 pb-24 md:pb-32 lg:pb-40">
         {children}

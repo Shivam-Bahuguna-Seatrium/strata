@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { sendContactNotification } from '@/lib/email';
 
 const ALLOWED_FIELDS = ['name', 'email', 'message'] as const;
 const MAX_LENGTH = { name: 100, email: 254, message: 2000 };
@@ -25,32 +25,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"Strata Contact" <${process.env.GMAIL_USER}>`,
-      to: 'hello@stratahydration.com',
-      replyTo: email,
-      subject: `New message from ${name.trim()}`,
-      text: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}`,
-      html: `
-        <div style="font-family:system-ui,sans-serif;max-width:500px;margin:0 auto;padding:24px;">
-          <h2 style="color:#0077FF;margin-bottom:16px;">💧 New Strata Contact</h2>
-          <p><strong>Name:</strong> ${name.trim()}</p>
-          <p><strong>Email:</strong> ${email.trim()}</p>
-          <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0;"/>
-          <p><strong>Message:</strong></p>
-          <p style="color:#374151;white-space:pre-wrap;">${message.trim()}</p>
-        </div>
-      `,
+    await sendContactNotification({
+      name: name.trim(),
+      email: email.trim(),
+      message: message.trim(),
     });
 
     return NextResponse.json({ success: true });
