@@ -15,6 +15,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const cartItems = useCartStore((s) => s.items);
   const addItem = useCartStore((s) => s.addItem);
 
   useEffect(() => {
@@ -43,6 +44,15 @@ export default function ProductDetailPage() {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleBuyNow = () => {
+    if (!product) return;
+    const exists = cartItems.some((item) => item.productId === product.id);
+    if (!exists) {
+      handleAdd();
+    }
+    router.push('/checkout');
+  };
+
   if (loading) {
     return (
       <section className="min-h-screen px-4 pt-10 pb-24 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
@@ -63,6 +73,33 @@ export default function ProductDetailPage() {
   if (!product) return null;
 
   const savings = product.comparePrice - product.price;
+  const isComingSoon = product.badge?.toLowerCase() === 'coming soon';
+
+  if (isComingSoon) {
+    return (
+      <section className="min-h-screen px-4 pt-12 pb-24 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="mb-6">
+            <Link href="/products" className="text-blue-600 hover:text-blue-700 font-semibold text-sm">← Back to Shop</Link>
+          </div>
+          <h1 className="font-display text-4xl font-black text-slate-600 mb-4">{product.emoji}</h1>
+          <h2 className="font-display text-3xl font-black text-slate-800 mb-3">{product.name}</h2>
+          <p className="text-lg text-slate-500 mb-8">Coming Soon</p>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8 mb-8">
+            <p className="text-slate-700 font-medium mb-4">This flavor is coming soon!</p>
+            <p className="text-slate-600 mb-4">{product.description}</p>
+            <div className="flex items-center gap-4 justify-center text-sm text-slate-600 mb-6">
+              <span>⚡ {product.stat}</span>
+              <span>🎯 {product.benefit}</span>
+            </div>
+          </div>
+          <Link href="/products" className="inline-block rounded-full px-8 py-3 text-sm font-bold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+            Browse Available Flavors
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-screen px-4 pt-8 pb-24 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
@@ -152,42 +189,51 @@ export default function ProductDetailPage() {
             ))}
           </div>
 
-          {/* Quantity + Add to cart */}
+          {/* Quantity + Add to cart (kept for future, disabled for current flow) */}
           <div className="flex items-center gap-4 mt-2">
-            <div className="flex items-center rounded-full border border-slate-200 bg-white/60">
+            <div className="flex items-center rounded-full border border-slate-200 bg-slate-100/80 opacity-55">
               <button
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-colors text-lg font-bold"
+                disabled
+                className="w-10 h-10 flex items-center justify-center text-slate-500 text-lg font-bold cursor-not-allowed"
               >−</button>
-              <span className="w-10 text-center font-bold text-slate-800">{qty}</span>
+              <span className="w-10 text-center font-bold text-slate-500">{qty}</span>
               <button
-                onClick={() => setQty((q) => Math.min(10, q + 1))}
-                className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-colors text-lg font-bold"
+                disabled
+                className="w-10 h-10 flex items-center justify-center text-slate-500 text-lg font-bold cursor-not-allowed"
               >+</button>
             </div>
 
             <motion.button
-              onClick={handleAdd}
-              disabled={product.stock === 0}
-              className="flex-1 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition-all disabled:opacity-50"
-              style={{ background: product.stock > 0 ? `linear-gradient(135deg, ${product.color}, ${product.color}cc)` : '#94a3b8' }}
-              whileHover={product.stock > 0 ? { scale: 1.02 } : undefined}
-              whileTap={product.stock > 0 ? { scale: 0.98 } : undefined}
+              onClick={handleBuyNow}
+              disabled={product.stock === 0 || isComingSoon}
+              className="flex-1 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: product.stock > 0 && !isComingSoon ? `linear-gradient(135deg, ${product.color}, ${product.color}cc)` : '#94a3b8' }}
+              whileHover={product.stock > 0 && !isComingSoon ? { scale: 1.02 } : undefined}
+              whileTap={product.stock > 0 && !isComingSoon ? { scale: 0.98 } : undefined}
             >
               <AnimatePresence mode="wait">
                 {added ? (
                   <motion.span key="added" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    ✓ Added to Cart
+                    Redirecting...
                   </motion.span>
                 ) : product.stock > 0 ? (
                   <motion.span key="add" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    🛒 Add to Cart — {formatINR(product.price * qty)}
+                    Buy Now — {formatINR(product.price)}
                   </motion.span>
                 ) : (
                   <span>Out of Stock</span>
                 )}
               </AnimatePresence>
             </motion.button>
+          </div>
+
+          <div className="mt-2">
+            <button
+              disabled
+              className="w-full rounded-full border border-slate-300 bg-slate-100 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-500 cursor-not-allowed"
+            >
+              Add To Cart (Coming Back Soon)
+            </button>
           </div>
 
           {/* Stock */}

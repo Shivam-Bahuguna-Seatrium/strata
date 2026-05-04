@@ -1,427 +1,182 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cart';
 import { formatINR } from '@/lib/utils';
-import { publicEnv } from '@/lib/env';
-import { useToastStore } from '@/components/Toast';
-import type { Address } from '@/lib/types';
 import Link from 'next/link';
 
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void; on: (event: string, cb: () => void) => void };
-  }
-}
-
-const INDIAN_STATES = [
-  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat',
-  'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh',
-  'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan',
-  'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-  'Delhi', 'Chandigarh', 'Jammu and Kashmir', 'Ladakh',
-];
+const BUY_LINKS = {
+  amazon: 'https://www.amazon.in/',
+  zepto: 'https://www.zeptonow.com/',
+} as const;
 
 export default function CheckoutPage() {
-  const router = useRouter();
+  const [mode, setMode] = useState<'explore' | 'cart'>('explore');
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore((s) => s.subtotalPaise());
   const shipping = useCartStore((s) => s.shippingPaise());
   const total = useCartStore((s) => s.totalPaise());
-  const clearCart = useCartStore((s) => s.clearCart);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const addToast = useToastStore((s) => s.addToast);
-
-  // Promo code state
-  const [promoCode, setPromoCode] = useState('');
-  const [promoLoading, setPromoLoading] = useState(false);
-  const [promoDiscount, setPromoDiscount] = useState(0);
-  const [promoDescription, setPromoDescription] = useState('');
-  const [promoApplied, setPromoApplied] = useState('');
-
-  const discountedTotal = total - promoDiscount;
-
-  const applyPromo = async () => {
-    if (!promoCode.trim()) return;
-    setPromoLoading(true);
-    try {
-      const res = await fetch('/api/promo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: promoCode, subtotalPaise: subtotal }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setPromoDiscount(data.data.discountPaise);
-        setPromoDescription(data.data.description);
-        setPromoApplied(data.data.code);
-        addToast(`Promo "${data.data.code}" applied — ${data.data.description}`, 'success');
-      } else {
-        addToast(data.error || 'Invalid code', 'error');
-        setPromoDiscount(0);
-        setPromoApplied('');
-      }
-    } catch {
-      addToast('Could not validate promo code', 'error');
-    }
-    setPromoLoading(false);
-  };
-
-  const removePromo = () => {
-    setPromoCode('');
-    setPromoDiscount(0);
-    setPromoDescription('');
-    setPromoApplied('');
-    addToast('Promo code removed', 'info');
-  };
-
-  const [form, setForm] = useState<Address & { email: string }>({
-    fullName: '',
-    phone: '',
-    line1: '',
-    line2: '',
-    city: '',
-    state: '',
-    pincode: '',
-    country: 'IN',
-    email: '',
-  });
-
-  const updateField = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    setError('');
-  };
-
-  const loadRazorpayScript = useCallback((): Promise<boolean> => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) { resolve(true); return; }
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  }, []);
-
-  const handleCheckout = async () => {
-    setError('');
-
-    // Basic client validation
-    if (!form.fullName || !form.phone || !form.email || !form.line1 || !form.city || !form.state || !form.pincode) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-    if (!/^[6-9]\d{9}$/.test(form.phone)) {
-      setError('Please enter a valid 10-digit Indian mobile number.');
-      return;
-    }
-    if (!/^\d{6}$/.test(form.pincode)) {
-      setError('Please enter a valid 6-digit pincode.');
-      return;
-    }
-    if (items.length === 0) {
-      setError('Your cart is empty.');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // 1. Create order via API
-      const checkoutRes = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
-          shippingAddress: {
-            fullName: form.fullName,
-            phone: form.phone,
-            line1: form.line1,
-            line2: form.line2,
-            city: form.city,
-            state: form.state,
-            pincode: form.pincode,
-            country: form.country,
-          },
-          email: form.email,
-        }),
-      });
-
-      const checkoutData = await checkoutRes.json();
-      if (!checkoutRes.ok) {
-        setError(checkoutData.error || 'Checkout failed');
-        setLoading(false);
-        return;
-      }
-
-      const { orderId, razorpayOrderId, totalPaise } = checkoutData.data;
-
-      // 2. Load Razorpay
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        setError('Failed to load payment provider. Please try again.');
-        setLoading(false);
-        return;
-      }
-
-      // 3. Open Razorpay checkout
-      const razorpay = new window.Razorpay({
-        key: publicEnv.razorpayKeyId,
-        amount: totalPaise,
-        currency: 'INR',
-        name: 'STRATA Hydration',
-        description: 'Electrolyte Drink Mix',
-        order_id: razorpayOrderId,
-        prefill: {
-          name: form.fullName,
-          email: form.email,
-          contact: form.phone,
-        },
-        theme: {
-          color: '#0077FF',
-        },
-        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
-          // 4. Verify payment
-          try {
-            const verifyRes = await fetch('/api/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(response),
-            });
-
-            const verifyData = await verifyRes.json();
-            if (verifyRes.ok) {
-              clearCart();
-              router.push(`/order/${verifyData.data.orderId}`);
-            } else {
-              setError(verifyData.error || 'Payment verification failed');
-            }
-          } catch {
-            setError('Payment verification failed. Contact support with your order ID.');
-          }
-          setLoading(false);
-        },
-        modal: {
-          ondismiss: () => {
-            setLoading(false);
-          },
-        },
-      });
-
-      razorpay.on('payment.failed', () => {
-        setError('Payment failed. Please try again or use a different method.');
-        setLoading(false);
-      });
-
-      razorpay.open();
-    } catch {
-      setError('Something went wrong. Please try again.');
-      setLoading(false);
-    }
-  };
 
   if (items.length === 0) {
     return (
-      <section className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
-        <span className="text-5xl mb-4">🛒</span>
-        <h1 className="font-display text-xl font-bold text-slate-800 mb-2">Nothing to checkout</h1>
-        <Link href="/products" className="text-sm text-blue-500 hover:underline">Browse products →</Link>
+      <section className="min-h-[74vh] flex items-center justify-center px-4 sm:px-6 lg:px-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative w-full max-w-2xl overflow-hidden rounded-[2rem] border border-white/60 bg-[linear-gradient(155deg,#ffffff,#edf7ff)] p-8 sm:p-10 text-center shadow-[0_24px_70px_rgba(0,105,190,0.12)]"
+        >
+          <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-cyan-300/25 blur-3xl" />
+          <div className="pointer-events-none absolute -left-16 -bottom-16 h-52 w-52 rounded-full bg-blue-300/20 blur-3xl" />
+          <span className="mb-6 block text-6xl sm:text-7xl">🛒</span>
+          <h1 className="font-display text-2xl sm:text-4xl font-black uppercase tracking-tight text-slate-900 mb-3">Cart Empty</h1>
+          <Link href="/products" className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-gradient-to-r from-blue-500 to-cyan-400 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white shadow-[0_12px_28px_rgba(0,138,230,0.32)] hover:scale-[1.02] transition-transform">
+            View Products <span aria-hidden>→</span>
+          </Link>
+        </motion.div>
       </section>
     );
   }
 
   return (
-    <section className="min-h-screen px-4 pt-10 pb-24 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
-      <div className="mx-auto max-w-6xl">
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="font-display text-2xl sm:text-3xl font-black text-slate-800 mb-8">
-          Checkout
-        </motion.h1>
+    <section className="min-h-screen px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20 2xl:px-28 pt-12 sm:pt-16 lg:pt-24 pb-24 sm:pb-28 lg:pb-32">
+      <div className="mx-auto max-w-7xl">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-12 sm:mb-16 lg:mb-20 text-center">
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-slate-900">Checkout</h1>
+          <div className="mx-auto mt-8 inline-flex w-full max-w-md rounded-full border border-slate-200/80 bg-white/80 p-2 shadow-sm backdrop-blur">
+            <button
+              type="button"
+              onClick={() => setMode('explore')}
+              className={`flex-1 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
+                mode === 'explore'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white'
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}
+            >
+              Explore
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('cart')}
+              className={`flex-1 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
+                mode === 'cart'
+                  ? 'bg-slate-700 text-white'
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}
+            >
+              Cart
+            </button>
+          </div>
+        </motion.div>
 
-        <div className="grid gap-8 lg:gap-12 lg:grid-cols-[1fr_400px]">
-          {/* Form */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="space-y-6">
-
-            {/* Contact */}
-            <div className="rounded-2xl border border-white/50 bg-white/60 backdrop-blur-sm p-5">
-              <h2 className="font-display text-base font-bold text-slate-800 mb-4">Contact</h2>
-              <input
-                type="email"
-                placeholder="Email address *"
-                value={form.email}
-                onChange={(e) => updateField('email', e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-              />
-            </div>
-
-            {/* Shipping */}
-            <div className="rounded-2xl border border-white/50 bg-white/60 backdrop-blur-sm p-5">
-              <h2 className="font-display text-base font-bold text-slate-800 mb-4">Shipping Address</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <input
-                  placeholder="Full name *"
-                  value={form.fullName}
-                  onChange={(e) => updateField('fullName', e.target.value)}
-                  className="sm:col-span-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <input
-                  placeholder="Mobile number *"
-                  value={form.phone}
-                  onChange={(e) => updateField('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <input
-                  placeholder="Pincode *"
-                  value={form.pincode}
-                  onChange={(e) => updateField('pincode', e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <input
-                  placeholder="Address line 1 *"
-                  value={form.line1}
-                  onChange={(e) => updateField('line1', e.target.value)}
-                  className="sm:col-span-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <input
-                  placeholder="Address line 2"
-                  value={form.line2}
-                  onChange={(e) => updateField('line2', e.target.value)}
-                  className="sm:col-span-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <input
-                  placeholder="City *"
-                  value={form.city}
-                  onChange={(e) => updateField('city', e.target.value)}
-                  className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <select
-                  value={form.state}
-                  onChange={(e) => updateField('state', e.target.value)}
-                  className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                >
-                  <option value="">Select state *</option>
-                  {INDIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Order Summary */}
+        {mode === 'explore' ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="lg:sticky lg:top-28 h-fit rounded-2xl border border-white/50 bg-white/70 backdrop-blur-sm p-5 shadow-sm"
+            className="mt-2 grid min-h-[62vh] items-stretch gap-8 sm:gap-10 lg:gap-12 lg:grid-cols-3"
           >
-            <h2 className="font-display text-base font-bold text-slate-800 mb-4">Order Summary</h2>
+            <motion.a
+              href={BUY_LINKS.amazon}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -8, scale: 1.01 }}
+              className="group relative isolate overflow-hidden rounded-[1.75rem] border border-amber-200/80 bg-white/60 p-8 sm:p-9 backdrop-blur-xl shadow-[0_16px_44px_rgba(245,158,11,0.18)] min-h-[20rem] sm:min-h-[23rem]"
+            >
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,250,240,0.9),rgba(255,243,214,0.85))]" />
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute -left-20 top-0 hidden h-full w-20 rotate-[18deg] transform-gpu bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent)] sm:block"
+                animate={{ x: ['-10%', '520%'] }}
+                transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 0.8, ease: 'easeInOut' }}
+              />
+              <div className="relative z-10">
+                <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl bg-amber-400/20 text-4xl font-black text-amber-800">A</div>
+                <h3 className="font-display text-2xl font-black uppercase text-slate-900">Amazon</h3>
+                <p className="mt-2 text-sm font-semibold text-slate-700">Premium marketplace checkout</p>
+                <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-wider text-amber-800">
+                  Open Amazon <span aria-hidden>→</span>
+                </div>
+              </div>
+            </motion.a>
 
-            {/* Items */}
-            <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+            <motion.a
+              href={BUY_LINKS.zepto}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -8, scale: 1.01 }}
+              className="group relative isolate overflow-hidden rounded-[1.75rem] border border-violet-200/80 bg-white/60 p-8 sm:p-9 backdrop-blur-xl shadow-[0_16px_44px_rgba(124,58,237,0.18)] min-h-[20rem] sm:min-h-[23rem]"
+            >
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(248,245,255,0.9),rgba(237,232,255,0.86))]" />
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute -left-20 top-0 hidden h-full w-20 rotate-[18deg] transform-gpu bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent)] sm:block"
+                animate={{ x: ['-10%', '520%'] }}
+                transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 0.8, ease: 'easeInOut', delay: 0.35 }}
+              />
+              <div className="relative z-10">
+                <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl bg-violet-400/20 text-4xl font-black text-violet-800">Z</div>
+                <h3 className="font-display text-2xl font-black uppercase text-slate-900">Zepto</h3>
+                <p className="mt-2 text-sm font-semibold text-slate-700">Fast quick-commerce checkout</p>
+                <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-wider text-violet-800">
+                  Open Zepto <span aria-hidden>→</span>
+                </div>
+              </div>
+            </motion.a>
+
+            <div className="relative overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white/60 p-8 sm:p-9 opacity-75 backdrop-blur-xl shadow-[0_16px_44px_rgba(100,116,139,0.14)] min-h-[20rem] sm:min-h-[23rem]">
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(247,247,248,0.92),rgba(236,239,242,0.9))]" />
+              <div className="relative z-10">
+                <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-300/25 text-4xl font-black text-slate-700">S</div>
+                <h3 className="font-display text-2xl font-black uppercase text-slate-700">Website</h3>
+                <p className="mt-2 text-sm font-semibold text-slate-600">Direct cart checkout service</p>
+                <div className="mt-5 inline-flex items-center rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Coming Soon
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.aside
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mx-auto h-fit w-full max-w-3xl rounded-3xl border border-white/60 bg-white/75 p-8 sm:p-10 shadow-[0_12px_36px_rgba(15,23,42,0.08)] backdrop-blur-sm"
+          >
+            <div className="mb-3 inline-flex rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-600">
+              Cart Mode Coming Soon
+            </div>
+            <div className="space-y-3 max-h-64 overflow-y-auto pr-1 pointer-events-none opacity-65 grayscale-[0.4] select-none">
               {items.map((item) => (
-                <div key={item.productId} className="flex items-center gap-3 text-sm">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style={{ background: `${item.color}15` }}>
+                <div key={item.productId} className="flex items-center gap-3 text-sm rounded-xl border border-slate-200 bg-white/80 px-3 py-2.5">
+                  <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ background: `${item.color}1a` }}>
                     {item.emoji}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-800 truncate">{item.name}</p>
-                    <p className="text-xs text-slate-400">Qty: {item.quantity}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-semibold text-slate-800">{item.name}</p>
+                    <p className="text-xs text-slate-500">Qty {item.quantity}</p>
                   </div>
-                  <span className="font-medium text-slate-800">{formatINR(item.price * item.quantity)}</span>
+                  <span className="font-semibold text-slate-800">{formatINR(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
 
-            <div className="h-px bg-slate-200 mb-3" />
+            <div className="my-4 h-px bg-slate-200" />
 
-            {/* Promo code */}
-            <div className="mb-4">
-              {promoApplied ? (
-                <div className="flex items-center justify-between rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2.5">
-                  <div>
-                    <p className="text-xs font-bold text-emerald-700">✓ {promoApplied}</p>
-                    <p className="text-[10px] text-emerald-600">{promoDescription}</p>
-                  </div>
-                  <button onClick={removePromo} className="text-xs text-emerald-500 hover:text-red-500 font-bold">Remove</button>
-                </div>
-              ) : (
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Promo code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => e.key === 'Enter' && applyPromo()}
-                    className="flex-1 rounded-xl border border-slate-200 bg-white/80 px-3 py-2.5 text-xs text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all uppercase font-mono tracking-wider"
-                  />
-                  <button
-                    onClick={applyPromo}
-                    disabled={promoLoading || !promoCode.trim()}
-                    className="rounded-xl bg-slate-800 px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-700 transition-colors disabled:opacity-50"
-                  >
-                    {promoLoading ? '...' : 'Apply'}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2 text-sm pointer-events-none opacity-65 select-none">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal</span>
                 <span>{formatINR(subtotal)}</span>
               </div>
-              {promoDiscount > 0 && (
-                <div className="flex justify-between text-emerald-600">
-                  <span>Discount ({promoApplied})</span>
-                  <span>-{formatINR(promoDiscount)}</span>
-                </div>
-              )}
               <div className="flex justify-between text-slate-600">
                 <span>Shipping</span>
-                <span>{shipping === 0 ? <span className="text-green-600 font-medium">Free</span> : formatINR(shipping)}</span>
+                <span>{shipping === 0 ? 'Free' : formatINR(shipping)}</span>
               </div>
-              <div className="h-px bg-slate-200 my-1" />
-              <div className="flex justify-between font-bold text-slate-800 text-base">
+              <div className="flex justify-between text-base font-black text-slate-900">
                 <span>Total</span>
-                <span>{formatINR(discountedTotal)}</span>
+                <span>{formatINR(total)}</span>
               </div>
             </div>
-
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-4 rounded-xl bg-red-50 border border-red-200 p-3 text-xs text-red-600"
-              >
-                {error}
-              </motion.div>
-            )}
-
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="mt-5 w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-blue-500 to-cyan-400 hover:shadow-lg hover:shadow-blue-200 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="32" /></svg>
-                  Processing...
-                </span>
-              ) : (
-                `Pay ${formatINR(discountedTotal)}`
-              )}
-            </button>
-
-            <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-slate-400">
-              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-              Secured by Razorpay · 256-bit SSL
-            </div>
-          </motion.div>
-        </div>
+          </motion.aside>
+        )}
       </div>
     </section>
   );

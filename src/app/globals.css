@@ -1,5 +1,4 @@
-﻿@import "lenis/dist/lenis.css";
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @theme inline {
   /* Bright blue primary with vibrant accents */
@@ -29,7 +28,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -46,46 +45,8 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* GPU-accelerated smooth animations & scroll performance */
-section,
-.hero-ticker,
-[class*="animate"] {
-  will-change: transform;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  contain: layout style paint;
-}
-
 img, svg {
   content-visibility: auto;
-  will-change: auto;
-}
-
-/* Motion-safe defaults for better performance */
-motion {
-  --motion-reduce-duration: 0ms;
-}
-
-/* Optimize Framer Motion performance */
-[data-framer-motion] {
-  transform: translateZ(0);
-  will-change: auto;
-}
-
-/* Reduce animation jank on slower devices */
-@supports (animation-timing-function: linear) {
-  @media (prefers-reduced-motion: no-preference) {
-    * {
-      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  * {
-    scroll-behavior: smooth;
-  }
 }
 
 /* Creative Font Styles */
@@ -259,22 +220,22 @@ motion {
 /* ── Glass cards — clean, borderless ── */
 .glass {
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 2px 20px rgba(0, 119, 255, 0.06);
 }
 
 .glass-strong {
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 4px 30px rgba(0, 119, 255, 0.08);
 }
 
 .card-ocean {
   background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(0,200,255,0.06) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 24px rgba(0, 119, 255, 0.06);
 }
 

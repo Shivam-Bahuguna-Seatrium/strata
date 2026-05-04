@@ -110,14 +110,12 @@ export default function HeroSection() {
                     style={{ width: i % 2 === 0 ? 5 : 4, height: i % 2 === 0 ? 5 : 4, background: i % 2 === 0 ? '#00D4FF' : '#FF8C00', boxShadow: `0 0 8px ${i % 2 === 0 ? '#00D4FF' : '#FF8C00'}` }} />
                 </motion.div>
               ))}
-              <motion.div
-                animate={{ y: [0, -14, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-[22rem] sm:w-[26rem] h-[26rem] sm:h-[28rem] flex items-center justify-center">
+              <div
+                className="relative w-[26rem] sm:w-[30rem] h-[30rem] sm:h-[32rem] flex items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/product.png" alt={heroContent.productAlt}
                   className="w-full h-full object-contain drop-shadow-[0_20px_60px_rgba(0,180,255,0.35)]" />
-              </motion.div>
+              </div>
               {/* Reflection glow */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-48 sm:w-64 h-6 rounded-full opacity-30"
                 style={{ background: 'radial-gradient(ellipse, rgba(0,180,255,0.5) 0%, transparent 80%)' }} />
@@ -262,10 +260,8 @@ export default function HeroSection() {
             ))}
             
             {/* Product image — larger */}
-            <motion.div
-              animate={{ y: [0, -22, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative w-[34rem] lg:w-[38rem] xl:w-[42rem] h-[34rem] lg:h-[38rem] xl:h-[42rem] flex items-center justify-center">
+            <div
+              className="relative w-[40rem] lg:w-[46rem] xl:w-[50rem] h-[40rem] lg:h-[46rem] xl:h-[50rem] flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/product.png"
@@ -276,7 +272,7 @@ export default function HeroSection() {
               {/* Reflection glow under product */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/5 h-8 rounded-full blur-xl"
                 style={{ background: 'radial-gradient(ellipse, rgba(0,212,255,0.3), transparent)' }} />
-            </motion.div>
+            </div>
 
             </motion.div>
           </div>

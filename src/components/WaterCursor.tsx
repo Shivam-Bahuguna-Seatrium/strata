@@ -18,13 +18,13 @@ export default function WaterCursor() {
   const lastTimeRef = useRef<number>(0);
 
   const addRipple = useCallback((x: number, y: number) => {
-    if (ripplesRef.current.length > 12) return;
+    if (ripplesRef.current.length > 16) return;
     ripplesRef.current.push({
       x,
       y,
       radius: 0,
-      maxRadius: 100 + Math.random() * 60,
-      opacity: 0.65,
+      maxRadius: 140 + Math.random() * 80,
+      opacity: 0.85,
       hue: 197,
     });
   }, []);
@@ -44,7 +44,7 @@ export default function WaterCursor() {
 
     const onMove = (e: MouseEvent) => {
       const now = Date.now();
-      if (now - lastTimeRef.current > 60) {
+      if (now - lastTimeRef.current > 40) {
         addRipple(e.clientX, e.clientY);
         lastTimeRef.current = now;
       }
@@ -55,12 +55,12 @@ export default function WaterCursor() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ripplesRef.current = ripplesRef.current.filter((r) => r.opacity > 0.01);
       ripplesRef.current.forEach((r) => {
-        r.radius += 3.5;
-        r.opacity *= 0.92;
+        r.radius += 2.8;
+        r.opacity *= 0.94;
         ctx.beginPath();
         ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
         ctx.strokeStyle = `hsla(${r.hue}, 100%, 65%, ${r.opacity})`;
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 4;
         ctx.stroke();
       });
       animFrameRef.current = requestAnimationFrame(animate);

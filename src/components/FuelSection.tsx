@@ -37,8 +37,8 @@ export default function FuelSection() {
       </div>
 
       {/* ═══ MAIN CONTENT ═══ */}
-      <div className="relative z-10 flex flex-1 items-center justify-center px-3 py-4 sm:px-5 sm:py-5 lg:px-7 lg:py-6">
-        <div className="mx-auto grid h-[calc(100%-1rem)] w-full max-w-[1240px] grid-rows-[auto_auto_minmax(0,1fr)] place-items-center gap-2.5 rounded-[28px] border border-white/35 bg-white/14 px-4 py-4 shadow-[0_24px_80px_rgba(16,86,156,0.10)] backdrop-blur-[10px] sm:h-[calc(100%-1.25rem)] sm:gap-3 sm:px-6 sm:py-5 lg:h-[calc(100%-1.5rem)] lg:gap-3.5 lg:px-8 lg:py-6 xl:px-10">
+      <div className="relative z-10 flex flex-1 items-center justify-center px-3 py-0 sm:px-5 sm:py-5 lg:px-7 lg:py-6">
+        <div className="mx-auto grid h-[calc(100%-1rem)] w-full max-w-[1240px] grid-rows-[auto_auto_minmax(0,1fr)] place-items-center gap-2.5 rounded-[28px] border border-white/35 bg-white/14 px-4 py-0 shadow-[0_24px_80px_rgba(16,86,156,0.10)] backdrop-blur-[10px] sm:h-[calc(100%-1.25rem)] sm:gap-3 sm:px-6 sm:py-5 lg:h-[calc(100%-1.5rem)] lg:gap-3.5 lg:px-8 lg:py-6 xl:px-10">
 
         {/* Tag + Heading */}
         <motion.div

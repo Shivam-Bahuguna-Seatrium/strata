@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { Product } from '@/lib/types';
 import { formatINR } from '@/lib/utils';
@@ -11,9 +12,11 @@ import { getActiveFlavors } from '@/config/flavors';
 import { hydrationContent } from '@/config/siteContent';
 
 export default function ProductsPage() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const cartItems = useCartStore((s) => s.items);
   const addItem = useCartStore((s) => s.addItem);
   const addToast = useToastStore((s) => s.addToast);
   const [addedId, setAddedId] = useState<string | null>(null);
@@ -44,6 +47,14 @@ export default function ProductsPage() {
     addToast(`${p.emoji} ${p.name} added to cart`);
     setAddedId(p.id);
     setTimeout(() => setAddedId(null), 1200);
+  };
+
+  const handleBuyNow = (p: Product) => {
+    const exists = cartItems.some((item) => item.productId === p.id);
+    if (!exists) {
+      handleAdd(p);
+    }
+    router.push('/checkout');
   };
 
   const filtered = products.filter(
@@ -122,7 +133,9 @@ export default function ProductsPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="group relative flex flex-col rounded-3xl border border-white/50 bg-white/60 backdrop-blur-sm overflow-hidden shadow-[0_8px_40px_rgba(0,80,160,0.08)] hover:shadow-[0_16px_60px_rgba(0,80,160,0.14)] transition-shadow"
+              className={`group relative flex flex-col rounded-3xl border border-white/50 bg-white/60 backdrop-blur-sm overflow-hidden shadow-[0_8px_40px_rgba(0,80,160,0.08)] hover:shadow-[0_16px_60px_rgba(0,80,160,0.14)] transition-shadow ${
+                isComingSoon ? 'opacity-50 pointer-events-none' : ''
+              }`}
             >
               {/* Badge */}
               {product.badge && (
@@ -133,16 +146,27 @@ export default function ProductsPage() {
               )}
 
               {/* Product Image */}
-              <Link href={`/products/${product.slug}`} className="relative flex items-center justify-center h-56 overflow-hidden">
-                <div className="absolute inset-0" style={{ background: `radial-gradient(circle, ${product.color}15 0%, transparent 70%)` }} />
-                <motion.img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="relative z-10 h-44 w-auto object-contain drop-shadow-md"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                />
-              </Link>
+              {isComingSoon ? (
+                <div className="relative flex items-center justify-center h-56 overflow-hidden">
+                  <div className="absolute inset-0" style={{ background: `radial-gradient(circle, ${product.color}15 0%, transparent 70%)` }} />
+                  <motion.img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="relative z-10 h-44 w-auto object-contain drop-shadow-md grayscale"
+                  />
+                </div>
+              ) : (
+                <Link href={`/products/${product.slug}`} className="relative flex items-center justify-center h-56 overflow-hidden">
+                  <div className="absolute inset-0" style={{ background: `radial-gradient(circle, ${product.color}15 0%, transparent 70%)` }} />
+                  <motion.img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="relative z-10 h-44 w-auto object-contain drop-shadow-md"
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  />
+                </Link>
+              )}
 
               {/* Info */}
               <div className="flex flex-1 flex-col px-5 pb-5 pt-2">
@@ -151,11 +175,17 @@ export default function ProductsPage() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{product.stat}</span>
                 </div>
 
-                <Link href={`/products/${product.slug}`}>
-                  <h3 className="font-display text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                {isComingSoon ? (
+                  <h3 className="font-display text-lg font-bold text-slate-400">
                     {product.name}
                   </h3>
-                </Link>
+                ) : (
+                  <Link href={`/products/${product.slug}`}>
+                    <h3 className="font-display text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                      {product.name}
+                    </h3>
+                  </Link>
+                )}
 
                 <p className="mt-1 text-xs text-slate-500 line-clamp-2 flex-1">{product.tagline}</p>
 
@@ -169,7 +199,7 @@ export default function ProductsPage() {
                   </div>
 
                   <motion.button
-                    onClick={() => handleAdd(product)}
+                    onClick={() => handleBuyNow(product)}
                     disabled={product.stock === 0 || isComingSoon}
                     className="relative flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ background: product.stock > 0 && !isComingSoon ? product.color : '#94a3b8' }}
@@ -182,12 +212,12 @@ export default function ProductsPage() {
                         animate={{ scale: 1 }}
                         className="flex items-center gap-1"
                       >
-                        ✓ Added
+                        Redirecting...
                       </motion.span>
                     ) : isComingSoon ? (
                       hydrationContent.comingSoonLabel
                     ) : product.stock > 0 ? (
-                      'Add to Cart'
+                      `Buy Now · ${formatINR(product.price)}`
                     ) : (
                       'Out of Stock'
                     )}
